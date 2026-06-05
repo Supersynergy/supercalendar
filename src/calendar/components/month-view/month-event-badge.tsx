@@ -1,19 +1,16 @@
-import { memo } from "react";
+import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
-
+import { memo } from "react";
+import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
+import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 
-import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
-import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
-
+import type { IEvent } from "@/calendar/interfaces";
 import { cn } from "@/lib/utils";
 
-import type { IEvent } from "@/calendar/interfaces";
-import type { VariantProps } from "class-variance-authority";
-
 const eventBadgeVariants = cva(
-  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+  "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
   {
     variants: {
       color: {
@@ -36,8 +33,8 @@ const eventBadgeVariants = cva(
         "gray-dot": "bg-neutral-50 dark:bg-neutral-900 [&_.event-dot]:fill-neutral-600",
       },
       multiDayPosition: {
-        first: "relative z-10 mr-0 w-[calc(100%_-_3px)] rounded-r-none border-r-0 [&>span]:mr-2.5",
-        middle: "relative z-10 mx-0 w-[calc(100%_+_1px)] rounded-none border-x-0",
+        first: "relative z-10 mr-0 w-[calc(100%-3px)] rounded-r-none border-r-0 [&>span]:mr-2.5",
+        middle: "relative z-10 mx-0 w-[calc(100%+1px)] rounded-none border-x-0",
         last: "ml-0 rounded-l-none border-l-0",
         none: "",
       },

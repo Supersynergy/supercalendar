@@ -1,13 +1,10 @@
-import { useMemo } from "react";
+import { endOfDay, format, isSameMonth, parseISO, startOfDay } from "date-fns";
 import { CalendarX2 } from "lucide-react";
-import { parseISO, format, endOfDay, startOfDay, isSameMonth } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { useMemo } from "react";
 import { AgendaDayGroup } from "@/calendar/components/agenda-view/agenda-day-group";
-
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 import type { IEvent } from "@/calendar/interfaces";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface IProps {
   singleDayEvents: IEvent[];

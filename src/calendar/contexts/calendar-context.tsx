@@ -1,8 +1,7 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
-
 import type { Dispatch, SetStateAction } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { IEvent, IUser } from "@/calendar/interfaces";
 import type { TBadgeVariant, TVisibleHours, TWorkingHours } from "@/calendar/types";
 

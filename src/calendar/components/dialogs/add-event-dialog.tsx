@@ -1,27 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { AlertTriangle } from "lucide-react";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import { useDisclosure } from "@/hooks/use-disclosure";
+import { AlertTriangle } from "lucide-react";
+import { useEffect } from "react";
+import type { TimeValue } from "react-aria-components";
+import { useForm } from "react-hook-form";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-
-import { Input } from "@/components/ui/input";
+import type { TEventFormData } from "@/calendar/schemas";
+import { eventSchema } from "@/calendar/schemas";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { SingleDayPicker } from "@/components/ui/single-day-picker";
 import { Textarea } from "@/components/ui/textarea";
 import { TimeInput } from "@/components/ui/time-input";
-import { SingleDayPicker } from "@/components/ui/single-day-picker";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Form, FormField, FormLabel, FormItem, FormControl, FormMessage } from "@/components/ui/form";
-import { Select, SelectItem, SelectContent, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogHeader, DialogClose, DialogContent, DialogTrigger, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-
-import { eventSchema } from "@/calendar/schemas";
-
-import type { TimeValue } from "react-aria-components";
-import type { TEventFormData } from "@/calendar/schemas";
+import { useDisclosure } from "@/hooks/use-disclosure";
 
 interface IProps {
   children: React.ReactNode;

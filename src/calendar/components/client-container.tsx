@@ -1,18 +1,17 @@
 "use client";
 
-import { useMemo } from "react";
 import { isSameDay, parseISO } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { useMemo } from "react";
+import { CalendarAgendaView } from "@/calendar/components/agenda-view/calendar-agenda-view";
 
 import { DndProviderWrapper } from "@/calendar/components/dnd/dnd-provider";
 
 import { CalendarHeader } from "@/calendar/components/header/calendar-header";
-import { CalendarYearView } from "@/calendar/components/year-view/calendar-year-view";
 import { CalendarMonthView } from "@/calendar/components/month-view/calendar-month-view";
-import { CalendarAgendaView } from "@/calendar/components/agenda-view/calendar-agenda-view";
 import { CalendarDayView } from "@/calendar/components/week-and-day-view/calendar-day-view";
 import { CalendarWeekView } from "@/calendar/components/week-and-day-view/calendar-week-view";
+import { CalendarYearView } from "@/calendar/components/year-view/calendar-year-view";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 
 import type { TCalendarView } from "@/calendar/types";
 
@@ -67,6 +66,8 @@ export function ClientContainer({ view }: IProps) {
         const isUserMatch = selectedUserId === "all" || event.user.id === selectedUserId;
         return isInSelectedDay && isUserMatch;
       }
+
+      return false;
     });
   }, [selectedDate, selectedUserId, events, view]);
 

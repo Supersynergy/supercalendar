@@ -1,10 +1,8 @@
-import { useMemo } from "react";
+import { format, getDaysInMonth, isSameDay, parseISO, startOfMonth } from "date-fns";
 import { useRouter } from "next/navigation";
-import { format, isSameDay, parseISO, getDaysInMonth, startOfMonth } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
+import { useMemo } from "react";
 import { YearViewDayCell } from "@/calendar/components/year-view/year-view-day-cell";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 
 import type { IEvent } from "@/calendar/interfaces";
 
@@ -41,7 +39,7 @@ export function YearViewMonth({ month, events }: IProps) {
       <button
         type="button"
         onClick={handleClick}
-        className="w-full rounded-t-lg border px-3 py-2 text-sm font-semibold hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        className="w-full rounded-t-lg border px-3 py-2 text-sm font-semibold hover:bg-accent focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
       >
         {monthName}
       </button>

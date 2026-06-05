@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import { Info } from "lucide-react";
-
+import { useState } from "react";
+import type { TimeValue } from "react-aria-components";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-
 import { Button } from "@/components/ui/button";
 import { TimeInput } from "@/components/ui/time-input";
-import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-
-import type { TimeValue } from "react-aria-components";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ChangeVisibleHoursInput() {
   const { visibleHours, setVisibleHours } = useCalendar();

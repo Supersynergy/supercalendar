@@ -1,17 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { Info, Moon } from "lucide-react";
+import { useState } from "react";
+import type { TimeValue } from "react-aria-components";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { TimeInput } from "@/components/ui/time-input";
-
-import type { TimeValue } from "react-aria-components";
-import { TooltipContent } from "@/components/ui/tooltip";
-import { Tooltip, TooltipTrigger } from "@/components/ui/tooltip";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 const DAYS_OF_WEEK = [
   { index: 0, name: "Sunday" },
@@ -49,8 +45,8 @@ export function ChangeWorkingHoursInput() {
     const updatedWorkingHours = { ...localWorkingHours };
 
     for (const dayId in updatedWorkingHours) {
-      const day = updatedWorkingHours[parseInt(dayId)];
-      const isDayActive = localWorkingHours[parseInt(dayId)].from > 0 || localWorkingHours[parseInt(dayId)].to > 0;
+      const day = updatedWorkingHours[parseInt(dayId, 10)];
+      const isDayActive = localWorkingHours[parseInt(dayId, 10)].from > 0 || localWorkingHours[parseInt(dayId, 10)].to > 0;
 
       if (isDayActive) {
         if (day.from === 0 && day.to === 0) {

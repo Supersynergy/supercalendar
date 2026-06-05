@@ -42,24 +42,28 @@ A [SuperSynergy](https://github.com/Supersynergy) fork of the excellent [`big-ca
 
 ## 🚀 What's new in SuperCalendar
 
-This fork keeps the original feature set and focuses on **performance, maintainability, and modern tooling**.
+A full end-to-end modernization on top of the original, focused on **a current stack, performance, and a real test suite**.
 
-- ⚡ **Memoized calendar context** — state changes no longer re-render every consumer
-- ⚡ **`React.memo` on hot leaf cells** (day cell, event block, event badge, year cell) — far fewer renders on navigation and the per-minute time tick
-- ⚡ **Single-pass, memoized event bucketing** — ISO dates are parsed only when the filtered set changes, not on every render
-- 🧰 **Added scripts** — `typecheck`, `format`, `check` for a clean local gate
-- 🗺 **A public [roadmap](docs/ROADMAP.md)** toward Next.js 16 / React 19 / Tailwind v4
+- 🆕 **Next.js 16 + React 19** — Turbopack default build (~3s), async Server Components
+- 🎨 **Tailwind v4** — CSS-first `@theme`, faster Oxide engine
+- 🔄 **@dnd-kit** drag & drop — replaces the unmaintained react-dnd; centralized drop logic, keyboard-accessible
+- ⚡ **Render perf** — memoized context, `React.memo` on hot cells, single-pass event bucketing (fewer re-renders on navigation and the per-minute tick)
+- 🧰 **Biome** — one fast tool for lint + format (replaces ESLint + Prettier)
+- ✅ **Tests** — Vitest unit + Playwright e2e (incl. a drag test), wired into CI
+- 🌗 **Streaming `loading` + `error` boundaries**
 
 See [`CHANGELOG.md`](CHANGELOG.md) for the full list.
 
 ## 🧱 Tech stack
 
-- **Framework**: Next.js (App Router)
+- **Framework**: Next.js 16 (App Router, Turbopack)
+- **UI**: React 19
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS + shadcn/ui
-- **Dates**: date-fns
-- **Drag & drop**: react-dnd
+- **Styling**: Tailwind CSS v4 + shadcn/ui
+- **Dates**: date-fns · **Date picker**: react-day-picker v9
+- **Drag & drop**: @dnd-kit
 - **State**: React Context
+- **Tooling**: Biome · **Tests**: Vitest + Playwright
 
 ## ⚡ Quick start
 
@@ -133,13 +137,11 @@ The calendar state is available anywhere inside the provider via the `useCalenda
 
 ## 🗺 Roadmap
 
-The big rocks live in [`docs/ROADMAP.md`](docs/ROADMAP.md). Highlights:
+The big rocks live in [`docs/ROADMAP.md`](docs/ROADMAP.md). Done in v2.0.0: Next.js 16, React 19, Tailwind v4, @dnd-kit, Biome, Vitest + Playwright. Still ahead:
 
-- Migrate to **Next.js 16 + React 19** (async `cookies()`, Turbopack build)
-- **Tailwind v4** (CSS-first config, Oxide engine)
-- **ESLint → Biome**, add **Vitest + Playwright** tests
 - Real data layer (TanStack Query + Server Actions) replacing the mock requests
-- Recurring events, timezone support, iCal import/export
+- Recurring events (RRULE), timezone-aware rendering, iCal import/export
+- Pre-parse event dates once + list virtualization for very large datasets
 
 ## 🤝 Contributing
 

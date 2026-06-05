@@ -1,17 +1,14 @@
-import { memo, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { isToday, startOfDay } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { useRouter } from "next/navigation";
+import { memo, useMemo } from "react";
+import { DroppableDayCell } from "@/calendar/components/dnd/droppable-day-cell";
 
 import { EventBullet } from "@/calendar/components/month-view/event-bullet";
-import { DroppableDayCell } from "@/calendar/components/dnd/droppable-day-cell";
 import { MonthEventBadge } from "@/calendar/components/month-view/month-event-badge";
-
-import { cn } from "@/lib/utils";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 import { getMonthCellEvents } from "@/calendar/helpers";
-
 import type { ICalendarCell, IEvent } from "@/calendar/interfaces";
+import { cn } from "@/lib/utils";
 
 interface IProps {
   cell: ICalendarCell;
@@ -41,7 +38,7 @@ function DayCellBase({ cell, events, eventPositions }: IProps) {
         <button
           onClick={handleClick}
           className={cn(
-            "flex size-6 translate-x-1 items-center justify-center rounded-full text-xs font-semibold hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring lg:px-2",
+            "flex size-6 translate-x-1 items-center justify-center rounded-full text-xs font-semibold hover:bg-accent focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring lg:px-2",
             !currentMonth && "opacity-20",
             isToday(date) && "bg-primary font-bold text-primary-foreground hover:bg-primary"
           )}

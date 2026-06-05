@@ -3,6 +3,39 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
+## [2.0.0] — 2026-06-05
+
+Full end-to-end modernization. Latest framework stack, modern DnD, Tailwind v4, Biome, and an automated test suite. All gates green.
+
+### Framework & language
+- **Next.js 14 → 16.2.7** — Turbopack is the default build engine (production build ~3s).
+- **React 18 → 19.2** (+ `@types/react`/`@types/react-dom` 19).
+- **Async `cookies()`** — `getTheme()` is now `async`; `app/layout.tsx` is an async Server Component (required by Next 15+).
+- `tsconfig` `target` es5 → **es2022**; `jsx: react-jsx` (automatic runtime).
+- `next.config.mjs` — pinned `turbopack.root`.
+- `overrides` to force a single React 19 across transitive deps.
+
+### Drag & drop
+- **react-dnd → @dnd-kit/core** (react-dnd is unmaintained on React 19). `DndContext` + `DragOverlay` + a single centralized `onDragEnd`; `useDraggable`/`useDroppable` with typed drop data. `PointerSensor` (5px activation so clicks still open the dialog) + `KeyboardSensor` for accessibility. Removed the custom drag layer.
+
+### Styling
+- **Tailwind v3 → v4** via the official codemod — CSS-first `@theme` in `globals.css`, `@tailwindcss/postcss`, `tailwind.config.ts` removed. Custom breakpoints (xs/sm 576, 2xl 1440), `text-xxs`, `container-8xl`, and accordion keyframes preserved; `tailwindcss-animate` wired via `@plugin`.
+- **react-day-picker 8 → 9.14** — `single-calendar.tsx` rewritten for the v9 API.
+
+### Tooling & tests
+- **ESLint + Prettier → Biome 2.4** (single fast linter/formatter). Fixed real findings surfaced by Biome, incl. a latent missing-return in `ClientContainer`'s `filter()` callback.
+- **Vitest** unit tests for calendar helpers + **Playwright** e2e (view rendering, navigation, @dnd-kit drag).
+
+### UX
+- App header rebranded to **SuperCalendar** (credit to lramos33 retained); GitHub link → fork.
+- `loading.tsx` (streaming skeleton) and `error.tsx` (retry boundary) for the calendar route group.
+
+### Verified
+- `tsc --noEmit` 0 errors · `biome check` 0 errors · `vitest` 7/7 · `next build` 8/8 pages · Playwright **4/4** (incl. drag, no page errors).
+- Visual check: all 5 views render correctly in dark mode after the Tailwind v4 migration.
+
+[2.0.0]: https://github.com/Supersynergy/supercalendar/releases/tag/v2.0.0
+
 ## [1.0.0] — 2026-06-05
 
 First SuperSynergy release, forked from [`big-calendar`](https://github.com/lramos33/big-calendar) @ `fbb8485`.

@@ -1,14 +1,11 @@
 import { format } from "date-fns";
-
-import { useDisclosure } from "@/hooks/use-disclosure";
+import type { ButtonHTMLAttributes } from "react";
 
 import { Button } from "@/components/ui/button";
-import { SingleCalendar } from "@/components/ui/single-calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import { SingleCalendar } from "@/components/ui/single-calendar";
+import { useDisclosure } from "@/hooks/use-disclosure";
 import { cn } from "@/lib/utils";
-
-import type { ButtonHTMLAttributes } from "react";
 
 // ================================== //
 
@@ -42,7 +39,7 @@ function SingleDayPicker({ id, onSelect, className, placeholder, labelVariant = 
       </PopoverTrigger>
 
       <PopoverContent align="center" className="w-fit p-0">
-        <SingleCalendar mode="single" selected={value} onSelect={handleSelect} initialFocus />
+        <SingleCalendar mode="single" selected={value} onSelect={handleSelect} autoFocus />
       </PopoverContent>
     </Popover>
   );

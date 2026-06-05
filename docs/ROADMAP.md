@@ -3,7 +3,7 @@
 Where this fork is headed. Items are ordered by leverage (impact ÷ risk).
 Versions reference the latest stable as of 2026-06-05.
 
-## Done (v1.0.0)
+## Done — v1.0.0 (rebrand + render perf)
 
 - ✅ Fork + rebrand to SuperCalendar with full attribution.
 - ✅ Memoized calendar context (kills full-tree re-renders on state change).
@@ -11,34 +11,30 @@ Versions reference the latest stable as of 2026-06-05.
 - ✅ `React.memo` on hot leaf cells (day cell, event block, event badge, year cell).
 - ✅ CI workflow + `check` / `typecheck` / `format` scripts.
 
-## P1 — More perf, no major bumps
+## Done — v2.0.0 (full modernization)
+
+- ✅ **Next.js 14 → 16.2.7** (Turbopack default build) + **React 18 → 19.2**.
+- ✅ Async `cookies()`; `app/layout.tsx` async Server Component.
+- ✅ `tsconfig` `target` es5 → es2022; `jsx: react-jsx`.
+- ✅ **react-dnd → @dnd-kit** (centralized `onDragEnd`, `DragOverlay`, keyboard sensor) — verified by Playwright drag test.
+- ✅ **Tailwind v3 → v4** (CSS-first `@theme`, Oxide engine).
+- ✅ **react-day-picker 8 → 9** (single-calendar rewritten for v9).
+- ✅ **ESLint + Prettier → Biome 2.4**.
+- ✅ **Vitest** unit tests + **Playwright** e2e, wired into CI.
+- ✅ Streaming `loading.tsx` + `error.tsx` boundaries.
+
+## Next — perf
 
 - [ ] Pre-parse event ISO strings to `Date` **once** at load (store on the event),
       instead of `parseISO` in render paths. Removes thousands of parses on large sets.
-- [ ] `loading.tsx` + `error.tsx` per route → streaming + graceful errors.
 - [ ] Virtualize Year view and Agenda list for large datasets.
-- [ ] `useCallback` for click/drag handlers passed into memoized cells.
+- [ ] `useCallback` for click handlers passed into memoized cells.
+- [ ] Re-enable `next/image` optimization once real images ship (currently `unoptimized`).
 
-## P2 — Stack modernization (branch + verify)
+## Next — quality
 
-Target: Next.js 16.2 · React 19.2 · TypeScript 6 · Tailwind v4.
-
-- [ ] **Async `cookies()`** — `src/cookies/get.ts` `getTheme()` must become `async` and be
-      `await`ed in `app/layout.tsx`. **This is a hard blocker** for Next 15+.
-- [ ] Bump `next` → 16, `react`/`react-dom` → 19; run official codemods.
-- [ ] Verify Radix UI / react-aria-components / react-dnd peer-deps under React 19.
-- [ ] Turbopack build (`next build --turbopack`, stable in 16).
-- [ ] `tsconfig` `target: es5` → `es2022` (smaller, faster output).
-- [ ] Tailwind v4 — CSS-first config (`@import "tailwindcss"`), Oxide engine (faster builds).
-- [ ] Re-enable `next/image` optimization (currently `unoptimized: true`).
-
-## P3 — Tooling + quality
-
-- [ ] ESLint 8 + Prettier → **Biome** (single fast tool).
-- [ ] **Vitest** unit tests for date/filter helpers + DnD reducers.
-- [ ] **Playwright** e2e for view switching, drag-drop, user filtering.
-- [ ] `date-fns` v3 → v4 (timezone support) or evaluate Temporal API.
-- [ ] Evaluate `react-dnd` → `@dnd-kit` (lighter, better a11y, actively maintained).
+- [ ] `date-fns` v3 → v4 (timezone support) or evaluate the Temporal API.
+- [ ] Component-level tests (dialogs, user filtering) alongside the helper unit tests.
 
 ## P4 — Features
 

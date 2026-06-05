@@ -1,20 +1,16 @@
-import { memo } from "react";
+import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
-import { format, differenceInMinutes, parseISO } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
-import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
+import { differenceInMinutes, format, parseISO } from "date-fns";
+import type { HTMLAttributes } from "react";
+import { memo } from "react";
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
-
+import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
+import type { IEvent } from "@/calendar/interfaces";
 import { cn } from "@/lib/utils";
 
-import type { HTMLAttributes } from "react";
-import type { IEvent } from "@/calendar/interfaces";
-import type { VariantProps } from "class-variance-authority";
-
 const calendarWeekEventCardVariants = cva(
-  "flex select-none flex-col gap-0.5 truncate whitespace-nowrap rounded-md border px-2 py-1.5 text-xs focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+  "flex select-none flex-col gap-0.5 truncate whitespace-nowrap rounded-md border px-2 py-1.5 text-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
   {
     variants: {
       color: {

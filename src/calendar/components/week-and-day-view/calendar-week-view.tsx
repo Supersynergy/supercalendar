@@ -1,19 +1,14 @@
-import { startOfWeek, addDays, format, parseISO, isSameDay, areIntervalsOverlapping } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
-import { ScrollArea } from "@/components/ui/scroll-area";
-
+import { addDays, areIntervalsOverlapping, format, isSameDay, parseISO, startOfWeek } from "date-fns";
 import { AddEventDialog } from "@/calendar/components/dialogs/add-event-dialog";
-import { EventBlock } from "@/calendar/components/week-and-day-view/event-block";
 import { DroppableTimeBlock } from "@/calendar/components/dnd/droppable-time-block";
 import { CalendarTimeline } from "@/calendar/components/week-and-day-view/calendar-time-line";
+import { EventBlock } from "@/calendar/components/week-and-day-view/event-block";
 import { WeekViewMultiDayEventsRow } from "@/calendar/components/week-and-day-view/week-view-multi-day-events-row";
-
-import { cn } from "@/lib/utils";
-import { groupEvents, getEventBlockStyle, isWorkingHour, getVisibleHours } from "@/calendar/helpers";
-
+import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { getEventBlockStyle, getVisibleHours, groupEvents, isWorkingHour } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { cn } from "@/lib/utils";
 
 interface IProps {
   singleDayEvents: IEvent[];

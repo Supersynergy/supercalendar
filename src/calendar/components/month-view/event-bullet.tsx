@@ -1,8 +1,6 @@
 import { cva } from "class-variance-authority";
-
-import { cn } from "@/lib/utils";
-
 import type { TEventColor } from "@/calendar/types";
+import { cn } from "@/lib/utils";
 
 const eventBulletVariants = cva("size-2 rounded-full", {
   variants: {

@@ -1,4 +1,4 @@
-import { parseISO, isWithinInterval, differenceInDays, startOfDay, endOfDay } from "date-fns";
+import { differenceInDays, endOfDay, isWithinInterval, parseISO, startOfDay } from "date-fns";
 
 import { MonthEventBadge } from "@/calendar/components/month-view/month-event-badge";
 

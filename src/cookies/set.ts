@@ -1,4 +1,4 @@
-import { THEME_COOKIE_NAME, THEME_COOKIE_MAX_AGE } from "@/constants/cookies.const";
+import { THEME_COOKIE_MAX_AGE, THEME_COOKIE_NAME } from "@/constants/cookies.const";
 
 import type { TTheme } from "@/types";
 
