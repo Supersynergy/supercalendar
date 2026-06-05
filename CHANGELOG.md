@@ -3,6 +3,20 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
+## [2.0.1] — 2026-06-05
+
+### Fixed
+- **Biome now lints + formats CSS** via `css.parser.tailwindDirectives` (Biome 2.4's native Tailwind v4 support), instead of excluding `globals.css`.
+- **avatar-group** — replaced an unchecked `as ReactElement[]` cast with an `isValidElement` type guard (drops text nodes; safe `child.props` access under React 19).
+
+### Added
+- `scripts/screenshots.ts` + `preview:shots` script — reproducible Playwright capture of every view (light + dark) plus a 1280×640 GitHub social card.
+
+### Changed
+- README preview replaced with fresh SuperCalendar screenshots; removed the stale upstream images.
+
+[2.0.1]: https://github.com/Supersynergy/supercalendar/releases/tag/v2.0.1
+
 ## [2.0.0] — 2026-06-05
 
 Full end-to-end modernization. Latest framework stack, modern DnD, Tailwind v4, Biome, and an automated test suite. All gates green.
