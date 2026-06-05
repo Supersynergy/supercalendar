@@ -5,6 +5,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Standalone output: self-contained server.js for slim Docker/Coolify/Kamal images.
+  output: "standalone",
   // Pin the Turbopack workspace root to this project (multiple lockfiles exist on disk).
   turbopack: { root: __dirname },
   images: { unoptimized: true },

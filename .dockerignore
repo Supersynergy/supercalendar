@@ -1,0 +1,15 @@
+.git
+node_modules
+.next
+out
+dist
+test-results
+playwright-report
+coverage
+.env*
+*.log
+.DS_Store
+Dockerfile
+.dockerignore
+README.md
+docs

@@ -1,0 +1,34 @@
+# Kamal 2 deploy for SuperCalendar.
+# Copy to config/deploy.yml in this repo, fill the server IP, then from this repo:
+#   ~/BASE/projects/deploy-stack/scripts/kamal deploy
+service: supercalendar
+image: ghcr.io/Supersynergy/supercalendar
+
+servers:
+  web:
+    - REPLACE_with_tofu_output_server_ipv4
+
+proxy:
+  ssl: true
+  host: calendar.supersynergy.de
+  app_port: 3000
+
+registry:
+  server: ghcr.io
+  username: Supersynergy
+  password:
+    - KAMAL_REGISTRY_PASSWORD
+
+builder:
+  arch: arm64 # Hetzner CAX (ARM Ampere). Use amd64 for CX/CPX line.
+
+env:
+  clear:
+    NODE_ENV: production
+    PORT: 3000
+
+# / redirects 307 -> /month-view, so health-check the real page.
+healthcheck:
+  path: /month-view
+  port: 3000
+  interval: 10s
