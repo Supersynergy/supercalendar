@@ -1,12 +1,24 @@
 {
-  "name": "big-calendar",
-  "version": "0.1.0",
-  "private": true,
+  "name": "supercalendar",
+  "version": "1.0.0",
+  "private": false,
+  "description": "SuperCalendar — a feature-rich, high-performance calendar for Next.js. A SuperSynergy fork of big-calendar by Leonardo Ramos.",
+  "license": "MIT",
+  "author": "SuperSynergy",
+  "homepage": "https://github.com/Supersynergy/supercalendar",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Supersynergy/supercalendar.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "tsc --noEmit && next lint",
     "turbo": "next dev --turbo"
   },
   "dependencies": {

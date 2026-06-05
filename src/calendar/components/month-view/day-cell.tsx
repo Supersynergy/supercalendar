@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { isToday, startOfDay } from "date-fns";
 
@@ -21,7 +21,7 @@ interface IProps {
 
 const MAX_VISIBLE_EVENTS = 3;
 
-export function DayCell({ cell, events, eventPositions }: IProps) {
+function DayCellBase({ cell, events, eventPositions }: IProps) {
   const { push } = useRouter();
   const { setSelectedDate } = useCalendar();
 
@@ -77,3 +77,5 @@ export function DayCell({ cell, events, eventPositions }: IProps) {
     </DroppableDayCell>
   );
 }
+
+export const DayCell = memo(DayCellBase);

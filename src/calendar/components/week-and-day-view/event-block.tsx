@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cva } from "class-variance-authority";
 import { format, differenceInMinutes, parseISO } from "date-fns";
 
@@ -46,7 +47,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeo
   event: IEvent;
 }
 
-export function EventBlock({ event, className }: IProps) {
+function EventBlockBase({ event, className }: IProps) {
   const { badgeVariant } = useCalendar();
 
   const start = parseISO(event.startDate);
@@ -89,3 +90,5 @@ export function EventBlock({ event, className }: IProps) {
     </DraggableEvent>
   );
 }
+
+export const EventBlock = memo(EventBlockBase);

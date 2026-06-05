@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { isToday } from "date-fns";
 import { useRouter } from "next/navigation";
 
@@ -13,7 +14,7 @@ interface IProps {
   events: IEvent[];
 }
 
-export function YearViewDayCell({ day, date, events }: IProps) {
+function YearViewDayCellBase({ day, date, events }: IProps) {
   const { push } = useRouter();
   const { setSelectedDate } = useCalendar();
 
@@ -79,3 +80,5 @@ export function YearViewDayCell({ day, date, events }: IProps) {
     </button>
   );
 }
+
+export const YearViewDayCell = memo(YearViewDayCellBase);

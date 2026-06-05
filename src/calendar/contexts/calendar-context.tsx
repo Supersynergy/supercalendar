@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useState } from "react";
 
 import type { Dispatch, SetStateAction } from "react";
 import type { IEvent, IUser } from "@/calendar/interfaces";
@@ -50,33 +50,34 @@ export function CalendarProvider({ children, users, events }: { children: React.
   // and the request that fetches the events should be refetched
   const [localEvents, setLocalEvents] = useState<IEvent[]>(events);
 
-  const handleSelectDate = (date: Date | undefined) => {
+  const handleSelectDate = useCallback((date: Date | undefined) => {
     if (!date) return;
     setSelectedDate(date);
-  };
+  }, []);
 
-  return (
-    <CalendarContext.Provider
-      value={{
-        selectedDate,
-        setSelectedDate: handleSelectDate,
-        selectedUserId,
-        setSelectedUserId,
-        badgeVariant,
-        setBadgeVariant,
-        users,
-        visibleHours,
-        setVisibleHours,
-        workingHours,
-        setWorkingHours,
-        // If you go to the refetch approach, you can remove the localEvents and pass the events directly
-        events: localEvents,
-        setLocalEvents,
-      }}
-    >
-      {children}
-    </CalendarContext.Provider>
+  // Memoize the context value so consumers only re-render when a value they
+  // actually read changes — not on every provider render.
+  const value = useMemo<ICalendarContext>(
+    () => ({
+      selectedDate,
+      setSelectedDate: handleSelectDate,
+      selectedUserId,
+      setSelectedUserId,
+      badgeVariant,
+      setBadgeVariant,
+      users,
+      visibleHours,
+      setVisibleHours,
+      workingHours,
+      setWorkingHours,
+      // If you go to the refetch approach, you can remove the localEvents and pass the events directly
+      events: localEvents,
+      setLocalEvents,
+    }),
+    [selectedDate, handleSelectDate, selectedUserId, badgeVariant, users, visibleHours, workingHours, localEvents]
   );
+
+  return <CalendarContext.Provider value={value}>{children}</CalendarContext.Provider>;
 }
 
 export function useCalendar(): ICalendarContext {

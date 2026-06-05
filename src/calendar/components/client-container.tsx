@@ -70,17 +70,21 @@ export function ClientContainer({ view }: IProps) {
     });
   }, [selectedDate, selectedUserId, events, view]);
 
-  const singleDayEvents = filteredEvents.filter(event => {
-    const startDate = parseISO(event.startDate);
-    const endDate = parseISO(event.endDate);
-    return isSameDay(startDate, endDate);
-  });
+  // Split into single- and multi-day buckets in a single pass, memoized so the
+  // ISO strings are only parsed when the filtered set actually changes.
+  const { singleDayEvents, multiDayEvents } = useMemo(() => {
+    const single: typeof filteredEvents = [];
+    const multi: typeof filteredEvents = [];
 
-  const multiDayEvents = filteredEvents.filter(event => {
-    const startDate = parseISO(event.startDate);
-    const endDate = parseISO(event.endDate);
-    return !isSameDay(startDate, endDate);
-  });
+    for (const event of filteredEvents) {
+      const startDate = parseISO(event.startDate);
+      const endDate = parseISO(event.endDate);
+      if (isSameDay(startDate, endDate)) single.push(event);
+      else multi.push(event);
+    }
+
+    return { singleDayEvents: single, multiDayEvents: multi };
+  }, [filteredEvents]);
 
   // For year view, we only care about the start date
   // by using the same date for both start and end,

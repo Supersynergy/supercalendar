@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { cva } from "class-variance-authority";
 import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
 
@@ -56,7 +57,7 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
   position?: "first" | "middle" | "last" | "none";
 }
 
-export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
+function MonthEventBadgeBase({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
   const { badgeVariant } = useCalendar();
 
   const itemStart = startOfDay(parseISO(event.startDate));
@@ -122,3 +123,5 @@ export function MonthEventBadge({ event, cellDate, eventCurrentDay, eventTotalDa
     </DraggableEvent>
   );
 }
+
+export const MonthEventBadge = memo(MonthEventBadgeBase);
