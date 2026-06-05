@@ -14,7 +14,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
   return (
     <CalendarProvider users={users} events={events}>
-      <div className="mx-auto flex max-w-screen-2xl flex-col gap-4 px-8 py-4">
+      <div className="mx-auto flex max-w-(--breakpoint-2xl) flex-col gap-4 px-8 py-4">
         {children}
 
         <Accordion type="single" collapsible>

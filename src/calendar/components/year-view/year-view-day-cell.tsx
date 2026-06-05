@@ -30,7 +30,7 @@ function YearViewDayCellBase({ day, date, events }: IProps) {
     <button
       onClick={handleClick}
       type="button"
-      className="flex h-11 flex-1 flex-col items-center justify-start gap-0.5 rounded-md pt-1 hover:bg-accent focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      className="flex h-11 flex-1 flex-col items-center justify-start gap-0.5 rounded-md pt-1 hover:bg-accent focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
     >
       <div
         className={cn(
