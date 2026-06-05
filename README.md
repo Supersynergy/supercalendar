@@ -14,9 +14,20 @@ A [SuperSynergy](https://github.com/Supersynergy) fork of the excellent [`big-ca
 
 ## Preview
 
-![preview](public/preview_1.png)
-![preview](public/preview_2.png)
-![preview](public/preview_3.png)
+![SuperCalendar month view](docs/preview/social-card.png)
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/preview/week-view-dark.png" alt="Week view (dark)" /></td>
+    <td width="50%"><img src="docs/preview/year-view-light.png" alt="Year view (light)" /></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="docs/preview/agenda-view-dark.png" alt="Agenda view (dark)" /></td>
+    <td width="50%"><img src="docs/preview/day-view-light.png" alt="Day view (light)" /></td>
+  </tr>
+</table>
+
+<sub>Screenshots are generated from the live app — regenerate with `bun run preview:shots` (see <a href="scripts/screenshots.ts"><code>scripts/screenshots.ts</code></a>).</sub>
 
 ---
 
