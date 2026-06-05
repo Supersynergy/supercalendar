@@ -3,23 +3,38 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
-## [Unreleased] — stack modernization (branch: `chore/modernize-next16-react19`)
+## [2.0.0] — 2026-06-05
 
-Build + SSR verified green; **client drag-and-drop interaction still needs manual browser QA** before merge to `main` (react-dnd@16 is unmaintained on React 19, mounts cleanly but isn't officially supported).
+Full end-to-end modernization. Latest framework stack, modern DnD, Tailwind v4, Biome, and an automated test suite. All gates green.
 
-### Changed
-- **Next.js 14 → 16.2.7** — Turbopack is now the default build engine (production build compiles in ~3.4s).
-- **React 18 → 19.2** (+ `@types/react`/`@types/react-dom` 19, `eslint-config-next` 16).
-- **react-day-picker 8 → 9.14** — rewrote `single-calendar.tsx` for the v9 API (`classNames` keys, `components.Chevron`); `initialFocus` → `autoFocus`.
-- **Async `cookies()`** — `getTheme()` is now `async/await`; `app/layout.tsx` is an async Server Component (required by Next 15+).
-- `tsconfig` `target` es5 → **es2022**; Next auto-set `jsx: react-jsx`.
-- `next.config.mjs` — pinned `turbopack.root` to the project (multiple lockfiles on disk).
-- `avatar-group.tsx` — narrowed `Children` props for React 19's stricter `unknown` child-prop typing.
-- Added `overrides` to force a single React 19 across transitive deps.
+### Framework & language
+- **Next.js 14 → 16.2.7** — Turbopack is the default build engine (production build ~3s).
+- **React 18 → 19.2** (+ `@types/react`/`@types/react-dom` 19).
+- **Async `cookies()`** — `getTheme()` is now `async`; `app/layout.tsx` is an async Server Component (required by Next 15+).
+- `tsconfig` `target` es5 → **es2022**; `jsx: react-jsx` (automatic runtime).
+- `next.config.mjs` — pinned `turbopack.root`.
+- `overrides` to force a single React 19 across transitive deps.
+
+### Drag & drop
+- **react-dnd → @dnd-kit/core** (react-dnd is unmaintained on React 19). `DndContext` + `DragOverlay` + a single centralized `onDragEnd`; `useDraggable`/`useDroppable` with typed drop data. `PointerSensor` (5px activation so clicks still open the dialog) + `KeyboardSensor` for accessibility. Removed the custom drag layer.
+
+### Styling
+- **Tailwind v3 → v4** via the official codemod — CSS-first `@theme` in `globals.css`, `@tailwindcss/postcss`, `tailwind.config.ts` removed. Custom breakpoints (xs/sm 576, 2xl 1440), `text-xxs`, `container-8xl`, and accordion keyframes preserved; `tailwindcss-animate` wired via `@plugin`.
+- **react-day-picker 8 → 9.14** — `single-calendar.tsx` rewritten for the v9 API.
+
+### Tooling & tests
+- **ESLint + Prettier → Biome 2.4** (single fast linter/formatter). Fixed real findings surfaced by Biome, incl. a latent missing-return in `ClientContainer`'s `filter()` callback.
+- **Vitest** unit tests for calendar helpers + **Playwright** e2e (view rendering, navigation, @dnd-kit drag).
+
+### UX
+- App header rebranded to **SuperCalendar** (credit to lramos33 retained); GitHub link → fork.
+- `loading.tsx` (streaming skeleton) and `error.tsx` (retry boundary) for the calendar route group.
 
 ### Verified
-- `next build` (Turbopack) green: compiled 3.4s, TypeScript 2.6s, 8/8 static pages.
-- Runtime smoke (prod server): `/` → 307, all 5 views → 200, calendar markup rendered, zero server errors.
+- `tsc --noEmit` 0 errors · `biome check` 0 errors · `vitest` 7/7 · `next build` 8/8 pages · Playwright **4/4** (incl. drag, no page errors).
+- Visual check: all 5 views render correctly in dark mode after the Tailwind v4 migration.
+
+[2.0.0]: https://github.com/Supersynergy/supercalendar/releases/tag/v2.0.0
 
 ## [1.0.0] — 2026-06-05
 

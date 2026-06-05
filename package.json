@@ -1,6 +1,6 @@
 {
   "name": "supercalendar",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": false,
   "description": "SuperCalendar — a feature-rich, high-performance calendar for Next.js. A SuperSynergy fork of big-calendar by Leonardo Ramos.",
   "license": "MIT",
