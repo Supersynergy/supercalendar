@@ -14,9 +14,9 @@ export function Header() {
           </div>
 
           <div className="space-y-1">
-            <p className="text-lg font-medium leading-6">Big calendar</p>
+            <p className="text-lg font-medium leading-6">SuperCalendar</p>
             <p className="text-sm text-foreground">
-              Built with Next.js and Tailwind by{" "}
+              A SuperSynergy fork of big-calendar by{" "}
               <Link
                 href="https://github.com/lramos33"
                 target="_blank"
@@ -31,7 +31,7 @@ export function Header() {
 
         <div className="hidden items-center gap-4 md:flex">
           <Link
-            href="https://github.com/lramos33/big-calendar"
+            href="https://github.com/Supersynergy/supercalendar"
             target="_blank"
             className="inline-flex gap-0.5 text-sm hover:underline focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring"
           >
