@@ -1,11 +1,9 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
-
-import { cn } from "@/lib/utils";
-
 import type { ReactNode } from "react";
 import type { TTimeBlockDropData } from "@/calendar/components/dnd/dnd-provider";
+import { cn } from "@/lib/utils";
 
 interface DroppableTimeBlockProps {
   date: Date;

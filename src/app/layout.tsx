@@ -1,16 +1,11 @@
 import "@/styles/globals.css";
 
 import { Analytics } from "@vercel/analytics/react";
-
-import { inter } from "@/styles/fonts";
-
-import { cn } from "@/lib/utils";
-
-import { Header } from "@/components/layout/header";
-
-import { getTheme } from "@/cookies/get";
-
 import type { Metadata, Viewport } from "next";
+import { Header } from "@/components/layout/header";
+import { getTheme } from "@/cookies/get";
+import { cn } from "@/lib/utils";
+import { inter } from "@/styles/fonts";
 
 export const viewport: Viewport = {
   width: "device-width",

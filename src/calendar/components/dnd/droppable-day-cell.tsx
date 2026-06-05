@@ -1,12 +1,10 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
-
-import { cn } from "@/lib/utils";
-
 import type { ReactNode } from "react";
-import type { ICalendarCell } from "@/calendar/interfaces";
 import type { TDayCellDropData } from "@/calendar/components/dnd/dnd-provider";
+import type { ICalendarCell } from "@/calendar/interfaces";
+import { cn } from "@/lib/utils";
 
 interface DroppableDayCellProps {
   cell: ICalendarCell;

@@ -1,9 +1,7 @@
-import { useMemo } from "react";
 import { addMonths, startOfYear } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
+import { useMemo } from "react";
 import { YearViewMonth } from "@/calendar/components/year-view/year-view-month";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 
 import type { IEvent } from "@/calendar/interfaces";
 

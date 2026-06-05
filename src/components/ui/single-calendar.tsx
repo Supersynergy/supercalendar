@@ -1,8 +1,8 @@
 "use client";
 
-import * as React from "react";
-import { DayPicker } from "react-day-picker";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type * as React from "react";
+import { DayPicker } from "react-day-picker";
 
 import { buttonVariants } from "@/components/ui/button";
 
@@ -44,11 +44,7 @@ function SingleCalendar({ className, classNames, showOutsideDays = true, ...prop
       }}
       components={{
         Chevron: ({ className, orientation }) =>
-          orientation === "left" ? (
-            <ChevronLeft className={cn("size-4", className)} />
-          ) : (
-            <ChevronRight className={cn("size-4", className)} />
-          ),
+          orientation === "left" ? <ChevronLeft className={cn("size-4", className)} /> : <ChevronRight className={cn("size-4", className)} />,
       }}
       {...props}
     />

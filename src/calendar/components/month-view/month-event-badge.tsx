@@ -1,16 +1,13 @@
-import { memo } from "react";
+import type { VariantProps } from "class-variance-authority";
 import { cva } from "class-variance-authority";
 import { endOfDay, format, isSameDay, parseISO, startOfDay } from "date-fns";
-
+import { memo } from "react";
+import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
+import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 
-import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
-import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
-
-import { cn } from "@/lib/utils";
-
 import type { IEvent } from "@/calendar/interfaces";
-import type { VariantProps } from "class-variance-authority";
+import { cn } from "@/lib/utils";
 
 const eventBadgeVariants = cva(
   "mx-1 flex size-auto h-6.5 select-none items-center justify-between gap-1.5 truncate whitespace-nowrap rounded-md border px-2 text-xs focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",

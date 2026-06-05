@@ -1,13 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { DndContext, DragOverlay, KeyboardSensor, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { differenceInMilliseconds, parseISO } from "date-fns";
-
-import { useUpdateEvent } from "@/calendar/hooks/use-update-event";
-
 import type { ReactNode } from "react";
-import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
+import { useState } from "react";
+import { useUpdateEvent } from "@/calendar/hooks/use-update-event";
 import type { IEvent } from "@/calendar/interfaces";
 
 export type TDayCellDropData = { type: "day-cell"; date: Date };

@@ -1,10 +1,8 @@
 import { useMemo } from "react";
-
+import { DayCell } from "@/calendar/components/month-view/day-cell";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 
-import { DayCell } from "@/calendar/components/month-view/day-cell";
-
-import { getCalendarCells, calculateMonthEventPositions } from "@/calendar/helpers";
+import { calculateMonthEventPositions, getCalendarCells } from "@/calendar/helpers";
 
 import type { IEvent } from "@/calendar/interfaces";
 

@@ -1,10 +1,8 @@
-import { useMemo } from "react";
+import { format, getDaysInMonth, isSameDay, parseISO, startOfMonth } from "date-fns";
 import { useRouter } from "next/navigation";
-import { format, isSameDay, parseISO, getDaysInMonth, startOfMonth } from "date-fns";
-
-import { useCalendar } from "@/calendar/contexts/calendar-context";
-
+import { useMemo } from "react";
 import { YearViewDayCell } from "@/calendar/components/year-view/year-view-day-cell";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
 
 import type { IEvent } from "@/calendar/interfaces";
 

@@ -1,5 +1,5 @@
+import { addDays, differenceInDays, endOfWeek, isAfter, isBefore, parseISO, startOfDay, startOfWeek } from "date-fns";
 import { useMemo } from "react";
-import { parseISO, startOfDay, startOfWeek, endOfWeek, addDays, differenceInDays, isBefore, isAfter } from "date-fns";
 
 import { MonthEventBadge } from "@/calendar/components/month-view/month-event-badge";
 

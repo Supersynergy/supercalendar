@@ -1,12 +1,10 @@
-import { memo } from "react";
 import { isToday } from "date-fns";
 import { useRouter } from "next/navigation";
+import { memo } from "react";
 
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-
-import { cn } from "@/lib/utils";
-
 import type { IEvent } from "@/calendar/interfaces";
+import { cn } from "@/lib/utils";
 
 interface IProps {
   day: number;

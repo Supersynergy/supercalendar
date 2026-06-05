@@ -1,13 +1,11 @@
 "use client";
 
-import { useId } from "react";
 import { useDraggable } from "@dnd-kit/core";
-
-import { cn } from "@/lib/utils";
-
 import type { ReactNode } from "react";
-import type { IEvent } from "@/calendar/interfaces";
+import { useId } from "react";
 import type { TEventDragData } from "@/calendar/components/dnd/dnd-provider";
+import type { IEvent } from "@/calendar/interfaces";
+import { cn } from "@/lib/utils";
 
 interface DraggableEventProps {
   event: IEvent;
