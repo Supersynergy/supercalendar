@@ -3,6 +3,24 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
+## [Unreleased] — stack modernization (branch: `chore/modernize-next16-react19`)
+
+Build + SSR verified green; **client drag-and-drop interaction still needs manual browser QA** before merge to `main` (react-dnd@16 is unmaintained on React 19, mounts cleanly but isn't officially supported).
+
+### Changed
+- **Next.js 14 → 16.2.7** — Turbopack is now the default build engine (production build compiles in ~3.4s).
+- **React 18 → 19.2** (+ `@types/react`/`@types/react-dom` 19, `eslint-config-next` 16).
+- **react-day-picker 8 → 9.14** — rewrote `single-calendar.tsx` for the v9 API (`classNames` keys, `components.Chevron`); `initialFocus` → `autoFocus`.
+- **Async `cookies()`** — `getTheme()` is now `async/await`; `app/layout.tsx` is an async Server Component (required by Next 15+).
+- `tsconfig` `target` es5 → **es2022**; Next auto-set `jsx: react-jsx`.
+- `next.config.mjs` — pinned `turbopack.root` to the project (multiple lockfiles on disk).
+- `avatar-group.tsx` — narrowed `Children` props for React 19's stricter `unknown` child-prop typing.
+- Added `overrides` to force a single React 19 across transitive deps.
+
+### Verified
+- `next build` (Turbopack) green: compiled 3.4s, TypeScript 2.6s, 8/8 static pages.
+- Runtime smoke (prod server): `/` → 307, all 5 views → 200, calendar markup rendered, zero server errors.
+
 ## [1.0.0] — 2026-06-05
 
 First SuperSynergy release, forked from [`big-calendar`](https://github.com/lramos33/big-calendar) @ `fbb8485`.

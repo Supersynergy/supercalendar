@@ -19,16 +19,17 @@ Versions reference the latest stable as of 2026-06-05.
 - [ ] Virtualize Year view and Agenda list for large datasets.
 - [ ] `useCallback` for click/drag handlers passed into memoized cells.
 
-## P2 — Stack modernization (branch + verify)
+## P2 — Stack modernization — ⏳ on branch `chore/modernize-next16-react19` (build green, pending DnD QA)
 
 Target: Next.js 16.2 · React 19.2 · TypeScript 6 · Tailwind v4.
 
-- [ ] **Async `cookies()`** — `src/cookies/get.ts` `getTheme()` must become `async` and be
-      `await`ed in `app/layout.tsx`. **This is a hard blocker** for Next 15+.
-- [ ] Bump `next` → 16, `react`/`react-dom` → 19; run official codemods.
-- [ ] Verify Radix UI / react-aria-components / react-dnd peer-deps under React 19.
-- [ ] Turbopack build (`next build --turbopack`, stable in 16).
-- [ ] `tsconfig` `target: es5` → `es2022` (smaller, faster output).
+- [x] **Async `cookies()`** — `getTheme()` is now `async`/`await`ed in `app/layout.tsx`.
+- [x] Bump `next` → 16.2.7, `react`/`react-dom` → 19.2.
+- [x] **react-day-picker 8 → 9** — `single-calendar.tsx` rewritten for v9 API.
+- [x] Turbopack build (default in 16; ~3.4s).
+- [x] `tsconfig` `target: es5` → `es2022`.
+- [ ] **Manual browser QA of drag-and-drop** under React 19 (react-dnd@16 unmaintained) — blocker for merge.
+- [ ] Evaluate `react-dnd` → `@dnd-kit` if DnD regressions surface (see P3).
 - [ ] Tailwind v4 — CSS-first config (`@import "tailwindcss"`), Oxide engine (faster builds).
 - [ ] Re-enable `next/image` optimization (currently `unoptimized: true`).
 

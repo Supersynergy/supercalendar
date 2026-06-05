@@ -24,8 +24,8 @@ export const metadata: Metadata = {
     "SuperCalendar — a feature-rich, high-performance calendar built with Next.js, TypeScript, and Tailwind CSS. Modern, responsive event and schedule management with multiple viewing options.",
 };
 
-export default function Layout({ children }: { children: React.ReactNode }) {
-  const theme = getTheme();
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const theme = await getTheme();
 
   return (
     <html lang="en-US" className={cn(inter.variable, theme)}>
