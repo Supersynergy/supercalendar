@@ -1,5 +1,5 @@
 import type { CSSProperties, ElementRef, HTMLAttributes, ReactElement } from "react";
-import { Children, cloneElement, forwardRef, useMemo } from "react";
+import { Children, cloneElement, forwardRef, isValidElement, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 // ================================== //
@@ -8,9 +8,12 @@ type TAvatarChildProps = { className?: string; style?: CSSProperties };
 type TAvatarGroupRef = ElementRef<"div">;
 type TAvatarGroupProps = HTMLAttributes<HTMLDivElement> & { max?: number; spacing?: number };
 
+const isAvatarElement = (child: unknown): child is ReactElement<TAvatarChildProps> => isValidElement(child);
+
 const AvatarGroup = forwardRef<TAvatarGroupRef, TAvatarGroupProps>(({ className, children, max = 1, spacing = 10, ...props }, ref) => {
-  // React 19 types child.props as `unknown`; narrow to the props we actually read/clone.
-  const avatarItems = Children.toArray(children) as ReactElement<TAvatarChildProps>[];
+  // Keep only real elements (drops text/number nodes) and type their props — React 19
+  // types `child.props` as `unknown`, so the guard restores safe access for cloneElement.
+  const avatarItems = Children.toArray(children).filter(isAvatarElement);
 
   const renderContent = useMemo(() => {
     return (

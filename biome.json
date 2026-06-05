@@ -3,7 +3,7 @@
   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
   "files": {
     "ignoreUnknown": true,
-    "includes": ["**", "!**/*.css", "!**/.next", "!**/node_modules"]
+    "includes": ["**", "!**/.next", "!**/node_modules"]
   },
   "formatter": {
     "enabled": true,
@@ -41,5 +41,10 @@
       "trailingCommas": "es5",
       "arrowParentheses": "asNeeded"
     }
+  },
+  "css": {
+    "parser": { "tailwindDirectives": true },
+    "linter": { "enabled": true },
+    "formatter": { "enabled": true }
   }
 }
