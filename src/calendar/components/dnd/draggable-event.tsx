@@ -1,44 +1,29 @@
 "use client";
 
-import { useDrag } from "react-dnd";
-import { useRef, useEffect } from "react";
-import { getEmptyImage } from "react-dnd-html5-backend";
+import { useId } from "react";
+import { useDraggable } from "@dnd-kit/core";
 
 import { cn } from "@/lib/utils";
 
+import type { ReactNode } from "react";
 import type { IEvent } from "@/calendar/interfaces";
-
-export const ItemTypes = {
-  EVENT: "event",
-};
+import type { TEventDragData } from "@/calendar/components/dnd/dnd-provider";
 
 interface DraggableEventProps {
   event: IEvent;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 export function DraggableEvent({ event, children }: DraggableEventProps) {
-  const ref = useRef<HTMLDivElement>(null);
+  // The same event can render in multiple cells (multi-day badges), so derive a
+  // unique draggable id per instance instead of using event.id.
+  const id = useId();
 
-  const [{ isDragging }, drag, preview] = useDrag(() => ({
-    type: ItemTypes.EVENT,
-    item: () => {
-      const width = ref.current?.offsetWidth || 0;
-      const height = ref.current?.offsetHeight || 0;
-      return { event, children, width, height };
-    },
-    collect: monitor => ({ isDragging: monitor.isDragging() }),
-  }));
-
-  // Hide the default drag preview
-  useEffect(() => {
-    preview(getEmptyImage(), { captureDraggingState: true });
-  }, [preview]);
-
-  drag(ref);
+  const data: TEventDragData = { event, overlay: children };
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({ id, data });
 
   return (
-    <div ref={ref} className={cn(isDragging && "opacity-40")}>
+    <div ref={setNodeRef} {...listeners} {...attributes} className={cn("touch-none", isDragging && "opacity-40")}>
       {children}
     </div>
   );
