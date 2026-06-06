@@ -6,8 +6,9 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 ## [Unreleased]
 
 ### Added
-- **Event creation works** — the Add Event dialog now persists a real event (`use-add-event`) instead of being a no-op demo.
-- **Events persist across reloads** — all events are stored in `localStorage` (write-through on every add/edit); the server seed loads on first visit, your changes survive after.
+- **Cross-device persistence** — events now live in a shared **SQLite/libSQL store** (Drizzle) behind REST route handlers (`GET`/`POST /api/events`, `PATCH`/`DELETE /api/events/:id`). The server seeds demo data on first boot; every device hitting the deployment sees the same calendar. Point `DATABASE_URL` at Turso for cloud sync (see `.env.example`).
+- **Delete events** — destructive action in the event details dialog (was missing; CRUD is now complete). Optimistic with rollback.
+- **Event create/edit/drag are optimistic** — UI updates instantly, then persists to the store in the background (`use-add-event` / `use-update-event` / `use-delete-event`).
 - **Internationalization** — display language switch in Calendar settings covering **50 languages**. Dates, month/weekday names, week-start and ordinals localize via date-fns `setDefaultOptions`; **RTL** languages (Arabic, Hebrew, Persian) flip `document.dir` automatically. UI strings translated for **English + German** (others fall back to English; structure in `src/calendar/i18n/`).
 - **12h/24h time-format toggle** in Calendar settings — persisted to `localStorage`, applied across every view, the now-line, hour axis, badges and all time inputs (`hourCycle` follows the setting).
 - **Keyboard shortcuts in the event details dialog** — `↑`/`↓` navigate prev/next event in place, `E` opens Edit. On-screen hint in the footer.

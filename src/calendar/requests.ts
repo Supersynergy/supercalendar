@@ -1,15 +1,7 @@
-import { CALENDAR_ITEMS_MOCK, USERS_MOCK } from "@/calendar/mocks";
+import { listEvents, listUsers } from "@/server/db/events-repo";
 
-export const getEvents = async () => {
-  // TO DO: implement this
-  // Increase the delay to better see the loading state
-  // await new Promise(resolve => setTimeout(resolve, 800));
-  return CALENDAR_ITEMS_MOCK;
-};
+// Server-side data access. Reads from the shared store (SQLite/libSQL), so every
+// device hitting this deployment sees the same events.
+export const getEvents = async () => listEvents();
 
-export const getUsers = async () => {
-  // TO DO: implement this
-  // Increase the delay to better see the loading state
-  // await new Promise(resolve => setTimeout(resolve, 800));
-  return USERS_MOCK;
-};
+export const getUsers = async () => listUsers();

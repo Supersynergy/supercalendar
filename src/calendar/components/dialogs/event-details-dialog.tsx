@@ -1,10 +1,11 @@
 "use client";
 
 import { format, parseISO } from "date-fns";
-import { Calendar, Clock, Text, User } from "lucide-react";
+import { Calendar, Clock, Text, Trash2, User } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { EditEventDialog } from "@/calendar/components/dialogs/edit-event-dialog";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { useDeleteEvent } from "@/calendar/hooks/use-delete-event";
 import type { IEvent } from "@/calendar/interfaces";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -16,6 +17,7 @@ interface IProps {
 
 export function EventDetailsDialog({ event, children }: IProps) {
   const { events, use24HourFormat, t } = useCalendar();
+  const { deleteEvent } = useDeleteEvent();
 
   const [open, setOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -52,6 +54,11 @@ export function EventDetailsDialog({ event, children }: IProps) {
       setOpen(false);
       setEditOpen(true);
     }
+  };
+
+  const handleDelete = () => {
+    setOpen(false);
+    deleteEvent(currentEvent.id);
   };
 
   const timeFormat = use24HourFormat ? "MMM d, yyyy HH:mm" : "MMM d, yyyy h:mm a";
@@ -107,16 +114,22 @@ export function EventDetailsDialog({ event, children }: IProps) {
               <kbd className="rounded border px-1 font-sans">↑</kbd> <kbd className="rounded border px-1 font-sans">↓</kbd> {t("event.hintNavigate")} ·{" "}
               <kbd className="rounded border px-1 font-sans">E</kbd> {t("event.hintEdit")}
             </p>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                setOpen(false);
-                setEditOpen(true);
-              }}
-            >
-              {t("event.edit")}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button type="button" variant="ghost" className="text-destructive hover:text-destructive" onClick={handleDelete}>
+                <Trash2 className="size-4" />
+                {t("event.delete")}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setOpen(false);
+                  setEditOpen(true);
+                }}
+              >
+                {t("event.edit")}
+              </Button>
+            </div>
           </DialogFooter>
         </DialogContent>
       </Dialog>

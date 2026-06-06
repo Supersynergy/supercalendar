@@ -93,36 +93,16 @@ export function CalendarProvider({ children, users, events }: { children: React.
 
   const t = useCallback<TranslateFn>(key => translate(localeCode, key), [localeCode]);
 
-  // Events are seeded from the server and then owned client-side. Any mutation
-  // (add/edit) is persisted to localStorage so it survives reloads — standing in
-  // for a backend. On a real app, replace this with API calls + refetch.
-  const [localEvents, setLocalEventsState] = useState<IEvent[]>(events);
+  // Events are seeded from the server (shared SQLite/libSQL store) and held in
+  // client state for instant optimistic updates. Mutations persist to the store
+  // via the events API (see the use-*-event hooks); a refresh re-syncs.
+  const [localEvents, setLocalEvents] = useState<IEvent[]>(events);
 
+  // Keep client state in sync if the server-provided events change (e.g. a
+  // navigation that re-runs the server fetch).
   useEffect(() => {
-    const stored = window.localStorage.getItem("supercalendar:events");
-    if (!stored) return;
-    try {
-      const parsed = JSON.parse(stored) as IEvent[];
-      if (Array.isArray(parsed)) setLocalEventsState(parsed);
-    } catch {
-      // Corrupt cache — drop it and keep the server seed.
-      window.localStorage.removeItem("supercalendar:events");
-    }
-  }, []);
-
-  // Persisting setter: every mutation writes through to localStorage. The
-  // initial server seed is NOT persisted until something actually changes it.
-  const setLocalEvents = useCallback<Dispatch<SetStateAction<IEvent[]>>>(action => {
-    setLocalEventsState(prev => {
-      const next = typeof action === "function" ? (action as (p: IEvent[]) => IEvent[])(prev) : action;
-      try {
-        window.localStorage.setItem("supercalendar:events", JSON.stringify(next));
-      } catch {
-        // Storage full / unavailable — keep in-memory state regardless.
-      }
-      return next;
-    });
-  }, []);
+    setLocalEvents(events);
+  }, [events]);
 
   const handleSelectDate = useCallback((date: Date | undefined) => {
     if (!date) return;

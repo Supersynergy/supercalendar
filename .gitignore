@@ -43,3 +43,8 @@ next-env.d.ts
 
 # yarn
 yarn.lock
+
+# local database
+/data/*.db
+/data/*.db-*
+/data/*.sqlite*
