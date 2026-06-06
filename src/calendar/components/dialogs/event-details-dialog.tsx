@@ -3,6 +3,7 @@
 import { format, parseISO } from "date-fns";
 import { Calendar, Clock, Text, User } from "lucide-react";
 import { EditEventDialog } from "@/calendar/components/dialogs/edit-event-dialog";
+import { Linkify } from "@/calendar/components/linkify";
 import type { IEvent } from "@/calendar/interfaces";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -54,7 +55,9 @@ export function EventDetailsDialog({ event, children }: IProps) {
             <Text className="mt-1 size-4 shrink-0" />
             <div>
               <p className="text-sm font-medium">Description</p>
-              <p className="text-sm text-muted-foreground">{event.description}</p>
+              <p className="text-sm text-muted-foreground">
+                <Linkify>{event.description}</Linkify>
+              </p>
             </div>
           </div>
         </div>

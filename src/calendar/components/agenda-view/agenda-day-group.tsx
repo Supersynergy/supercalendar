@@ -8,10 +8,17 @@ interface IProps {
   date: Date;
   events: IEvent[];
   multiDayEvents: IEvent[];
+  selectedIds?: Set<number>;
+  onToggleSelect?: (id: number) => void;
+  onDuplicate?: (id: number) => void;
+  onDelete?: (id: number) => void;
+  onUpdateTitle?: (id: number, title: string) => void;
 }
 
-export function AgendaDayGroup({ date, events, multiDayEvents }: IProps) {
+export function AgendaDayGroup({ date, events, multiDayEvents, selectedIds, onToggleSelect, onDuplicate, onDelete, onUpdateTitle }: IProps) {
   const sortedEvents = [...events].sort((a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime());
+
+  const cardActions = { onToggleSelect, onDuplicate, onDelete, onUpdateTitle };
 
   return (
     <div className="space-y-4">
@@ -28,10 +35,20 @@ export function AgendaDayGroup({ date, events, multiDayEvents }: IProps) {
 
             const eventTotalDays = differenceInDays(eventEnd, eventStart) + 1;
             const eventCurrentDay = differenceInDays(currentDate, eventStart) + 1;
-            return <AgendaEventCard key={event.id} event={event} eventCurrentDay={eventCurrentDay} eventTotalDays={eventTotalDays} />;
+            return (
+              <AgendaEventCard
+                key={event.id}
+                event={event}
+                eventCurrentDay={eventCurrentDay}
+                eventTotalDays={eventTotalDays}
+                selected={selectedIds?.has(event.id)}
+                {...cardActions}
+              />
+            );
           })}
 
-        {sortedEvents.length > 0 && sortedEvents.map(event => <AgendaEventCard key={event.id} event={event} />)}
+        {sortedEvents.length > 0 &&
+          sortedEvents.map(event => <AgendaEventCard key={event.id} event={event} selected={selectedIds?.has(event.id)} {...cardActions} />)}
       </div>
     </div>
   );

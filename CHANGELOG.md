@@ -8,6 +8,10 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 ### Performance
 - **Instant view switching** — the active view (day/week/month/year/agenda) is now client-side state in `CalendarProvider`, synced to the URL via `history.pushState` instead of Next.js route navigation. No RSC roundtrip or `ClientContainer` remount on switch — all views + events are already in memory → instant. Browser back/forward stays in sync via `popstate`; deep-links to each `/*-view` still work.
 
+### Added
+- **Agenda smart menu** — the agenda list is a content menu, not a drag surface: text is selectable, descriptions **auto-linkify** (URLs / emails / phone numbers), each event has a **quick-actions** popover (Details / Bearbeiten / Duplizieren / Link kopieren / Löschen), **multi-select** via checkboxes with a bulk bar (select-all / delete / **export .ics**), and **inline title rename** (double-click). The event-details dialog description also linkifies.
+- `Linkify` component (zero-dep auto-linker) and `ics.ts` (RFC 5545 `.ics` export).
+
 ## [2.0.1] — 2026-06-05
 
 ### Fixed
