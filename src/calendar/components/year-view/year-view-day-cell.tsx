@@ -1,5 +1,4 @@
 import { isToday } from "date-fns";
-import { useRouter } from "next/navigation";
 import { memo } from "react";
 
 import { useCalendar } from "@/calendar/contexts/calendar-context";
@@ -13,15 +12,14 @@ interface IProps {
 }
 
 function YearViewDayCellBase({ day, date, events }: IProps) {
-  const { push } = useRouter();
-  const { setSelectedDate } = useCalendar();
+  const { setSelectedDate, setView } = useCalendar();
 
   const maxIndicators = 3;
   const eventCount = events.length;
 
   const handleClick = () => {
     setSelectedDate(date);
-    push("/day-view");
+    setView("day");
   };
 
   return (

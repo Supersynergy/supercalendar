@@ -1,4 +1,5 @@
 import { addDays, areIntervalsOverlapping, format, isSameDay, parseISO, startOfWeek } from "date-fns";
+import { useMemo } from "react";
 import { AddEventDialog } from "@/calendar/components/dialogs/add-event-dialog";
 import { DroppableTimeBlock } from "@/calendar/components/dnd/droppable-time-block";
 import { CalendarTimeline } from "@/calendar/components/week-and-day-view/calendar-time-line";
@@ -18,10 +19,22 @@ interface IProps {
 export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
   const { selectedDate, workingHours, visibleHours } = useCalendar();
 
-  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
+  const { hours, earliestEventHour, latestEventHour } = useMemo(() => getVisibleHours(visibleHours, singleDayEvents), [visibleHours, singleDayEvents]);
 
-  const weekStart = startOfWeek(selectedDate);
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  const weekDays = useMemo(() => {
+    const weekStart = startOfWeek(selectedDate);
+    return Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
+  }, [selectedDate]);
+
+  // Pre-group events per day once, instead of re-filtering + re-grouping on every render.
+  const groupedByDay = useMemo(
+    () =>
+      weekDays.map(day => {
+        const dayEvents = singleDayEvents.filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day));
+        return { day, groupedEvents: groupEvents(dayEvents) };
+      }),
+    [weekDays, singleDayEvents]
+  );
 
   return (
     <>
@@ -63,10 +76,7 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
             {/* Week grid */}
             <div className="relative flex-1 border-l">
               <div className="grid grid-cols-7 divide-x">
-                {weekDays.map((day, dayIndex) => {
-                  const dayEvents = singleDayEvents.filter(event => isSameDay(parseISO(event.startDate), day) || isSameDay(parseISO(event.endDate), day));
-                  const groupedEvents = groupEvents(dayEvents);
-
+                {groupedByDay.map(({ day, groupedEvents }, dayIndex) => {
                   return (
                     <div key={dayIndex} className="relative">
                       {hours.map((hour, index) => {

@@ -3,6 +3,11 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
+## [Unreleased]
+
+### Performance
+- **Instant view switching** — the active view (day/week/month/year/agenda) is now client-side state in `CalendarProvider`, synced to the URL via `history.pushState` instead of Next.js route navigation. No RSC roundtrip or `ClientContainer` remount on switch — all views + events are already in memory → instant. Browser back/forward stays in sync via `popstate`; deep-links to each `/*-view` still work.
+
 ## [2.0.1] — 2026-06-05
 
 ### Fixed

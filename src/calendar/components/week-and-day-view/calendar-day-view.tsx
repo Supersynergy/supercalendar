@@ -1,5 +1,6 @@
 import { areIntervalsOverlapping, format, parseISO } from "date-fns";
 import { Calendar, Clock, User } from "lucide-react";
+import { useMemo } from "react";
 import { AddEventDialog } from "@/calendar/components/dialogs/add-event-dialog";
 import { DroppableTimeBlock } from "@/calendar/components/dnd/droppable-time-block";
 import { CalendarTimeline } from "@/calendar/components/week-and-day-view/calendar-time-line";
@@ -20,20 +21,22 @@ interface IProps {
 export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
   const { selectedDate, setSelectedDate, users, visibleHours, workingHours } = useCalendar();
 
-  const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
+  const { hours, earliestEventHour, latestEventHour } = useMemo(() => getVisibleHours(visibleHours, singleDayEvents), [visibleHours, singleDayEvents]);
 
+  // Recomputed each render on purpose — "happening now" depends on wall-clock time.
   const currentEvents = getCurrentEvents(singleDayEvents);
 
-  const dayEvents = singleDayEvents.filter(event => {
-    const eventDate = parseISO(event.startDate);
-    return (
-      eventDate.getDate() === selectedDate.getDate() &&
-      eventDate.getMonth() === selectedDate.getMonth() &&
-      eventDate.getFullYear() === selectedDate.getFullYear()
-    );
-  });
-
-  const groupedEvents = groupEvents(dayEvents);
+  const groupedEvents = useMemo(() => {
+    const dayEvents = singleDayEvents.filter(event => {
+      const eventDate = parseISO(event.startDate);
+      return (
+        eventDate.getDate() === selectedDate.getDate() &&
+        eventDate.getMonth() === selectedDate.getMonth() &&
+        eventDate.getFullYear() === selectedDate.getFullYear()
+      );
+    });
+    return groupEvents(dayEvents);
+  }, [singleDayEvents, selectedDate]);
 
   return (
     <div className="flex">

@@ -1,5 +1,4 @@
 import { isToday, startOfDay } from "date-fns";
-import { useRouter } from "next/navigation";
 import { memo, useMemo } from "react";
 import { DroppableDayCell } from "@/calendar/components/dnd/droppable-day-cell";
 
@@ -19,8 +18,7 @@ interface IProps {
 const MAX_VISIBLE_EVENTS = 3;
 
 function DayCellBase({ cell, events, eventPositions }: IProps) {
-  const { push } = useRouter();
-  const { setSelectedDate } = useCalendar();
+  const { setSelectedDate, setView } = useCalendar();
 
   const { day, currentMonth, date } = cell;
 
@@ -29,7 +27,7 @@ function DayCellBase({ cell, events, eventPositions }: IProps) {
 
   const handleClick = () => {
     setSelectedDate(date);
-    push("/day-view");
+    setView("day");
   };
 
   return (

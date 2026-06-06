@@ -13,14 +13,8 @@ import { CalendarWeekView } from "@/calendar/components/week-and-day-view/calend
 import { CalendarYearView } from "@/calendar/components/year-view/calendar-year-view";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 
-import type { TCalendarView } from "@/calendar/types";
-
-interface IProps {
-  view: TCalendarView;
-}
-
-export function ClientContainer({ view }: IProps) {
-  const { selectedDate, selectedUserId, events } = useCalendar();
+export function ClientContainer() {
+  const { selectedDate, selectedUserId, events, view } = useCalendar();
 
   const filteredEvents = useMemo(() => {
     return events.filter(event => {

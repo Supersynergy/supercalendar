@@ -1,11 +1,14 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import type { Dispatch, SetStateAction } from "react";
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import type { IEvent, IUser } from "@/calendar/interfaces";
-import type { TBadgeVariant, TVisibleHours, TWorkingHours } from "@/calendar/types";
+import type { TBadgeVariant, TCalendarView, TVisibleHours, TWorkingHours } from "@/calendar/types";
 
 interface ICalendarContext {
+  view: TCalendarView;
+  setView: (view: TCalendarView) => void;
   selectedDate: Date;
   setSelectedDate: (date: Date | undefined) => void;
   selectedUserId: IUser["id"] | "all";
@@ -35,7 +38,29 @@ const WORKING_HOURS = {
 
 const VISIBLE_HOURS = { from: 7, to: 18 };
 
+// View <-> URL. Switching is client-side state (instant); the URL is kept in sync
+// via history.pushState so deep-links and back/forward still work — no route
+// navigation / RSC roundtrip / remount on every view switch.
+const VIEW_PATHS: Record<TCalendarView, string> = {
+  day: "/day-view",
+  week: "/week-view",
+  month: "/month-view",
+  year: "/year-view",
+  agenda: "/agenda-view",
+};
+
+function pathToView(pathname: string): TCalendarView {
+  if (pathname.startsWith("/day-view")) return "day";
+  if (pathname.startsWith("/week-view")) return "week";
+  if (pathname.startsWith("/year-view")) return "year";
+  if (pathname.startsWith("/agenda-view")) return "agenda";
+  return "month";
+}
+
 export function CalendarProvider({ children, users, events }: { children: React.ReactNode; users: IUser[]; events: IEvent[] }) {
+  const pathname = usePathname();
+
+  const [view, setViewState] = useState<TCalendarView>(() => pathToView(pathname));
   const [badgeVariant, setBadgeVariant] = useState<TBadgeVariant>("colored");
   const [visibleHours, setVisibleHours] = useState<TVisibleHours>(VISIBLE_HOURS);
   const [workingHours, setWorkingHours] = useState<TWorkingHours>(WORKING_HOURS);
@@ -54,10 +79,26 @@ export function CalendarProvider({ children, users, events }: { children: React.
     setSelectedDate(date);
   }, []);
 
+  const setView = useCallback((next: TCalendarView) => {
+    setViewState(next);
+    if (typeof window !== "undefined") {
+      window.history.pushState(null, "", VIEW_PATHS[next]);
+    }
+  }, []);
+
+  // Keep view in sync when the user uses browser back/forward.
+  useEffect(() => {
+    const onPopState = () => setViewState(pathToView(window.location.pathname));
+    window.addEventListener("popstate", onPopState);
+    return () => window.removeEventListener("popstate", onPopState);
+  }, []);
+
   // Memoize the context value so consumers only re-render when a value they
   // actually read changes — not on every provider render.
   const value = useMemo<ICalendarContext>(
     () => ({
+      view,
+      setView,
       selectedDate,
       setSelectedDate: handleSelectDate,
       selectedUserId,
@@ -73,7 +114,7 @@ export function CalendarProvider({ children, users, events }: { children: React.
       events: localEvents,
       setLocalEvents,
     }),
-    [selectedDate, handleSelectDate, selectedUserId, badgeVariant, users, visibleHours, workingHours, localEvents]
+    [view, setView, selectedDate, handleSelectDate, selectedUserId, badgeVariant, users, visibleHours, workingHours, localEvents]
   );
 
   return <CalendarContext.Provider value={value}>{children}</CalendarContext.Provider>;

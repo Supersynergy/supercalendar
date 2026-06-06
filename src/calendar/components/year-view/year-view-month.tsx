@@ -1,5 +1,4 @@
 import { format, getDaysInMonth, isSameDay, parseISO, startOfMonth } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { YearViewDayCell } from "@/calendar/components/year-view/year-view-day-cell";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
@@ -12,8 +11,7 @@ interface IProps {
 }
 
 export function YearViewMonth({ month, events }: IProps) {
-  const { push } = useRouter();
-  const { setSelectedDate } = useCalendar();
+  const { setSelectedDate, setView } = useCalendar();
 
   const monthName = format(month, "MMMM");
 
@@ -31,7 +29,7 @@ export function YearViewMonth({ month, events }: IProps) {
 
   const handleClick = () => {
     setSelectedDate(new Date(month.getFullYear(), month.getMonth(), 1));
-    push("/month-view");
+    setView("month");
   };
 
   return (
