@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { eventPayloadSchema } from "@/server/db/event-payload";
+import { publish } from "@/server/db/events-bus";
 import { createEvent, listEvents } from "@/server/db/events-repo";
 
 export const runtime = "nodejs";
@@ -16,5 +17,6 @@ export async function POST(request: Request) {
   }
 
   const created = await createEvent(parsed.data);
+  publish();
   return NextResponse.json(created, { status: 201 });
 }

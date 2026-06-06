@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { eventPayloadSchema } from "@/server/db/event-payload";
+import { publish } from "@/server/db/events-bus";
 import { deleteEvent, updateEvent } from "@/server/db/events-repo";
 
 export const runtime = "nodejs";
@@ -18,6 +19,7 @@ export async function PATCH(request: Request, { params }: Context) {
 
   const updated = await updateEvent(id, parsed.data);
   if (!updated) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  publish();
   return NextResponse.json(updated);
 }
 
@@ -26,5 +28,6 @@ export async function DELETE(_request: Request, { params }: Context) {
   if (!Number.isFinite(id)) return NextResponse.json({ error: "Invalid id" }, { status: 400 });
 
   await deleteEvent(id);
+  publish();
   return new NextResponse(null, { status: 204 });
 }

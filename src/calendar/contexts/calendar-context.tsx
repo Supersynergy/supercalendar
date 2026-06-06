@@ -104,6 +104,38 @@ export function CalendarProvider({ children, users, events }: { children: React.
     setLocalEvents(events);
   }, [events]);
 
+  // Live sync: subscribe to server-sent change ticks and re-pull the shared
+  // store, so a mutation on one device shows up on every other device in real
+  // time (no refresh needed).
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof EventSource === "undefined") return;
+
+    const source = new EventSource("/api/events/stream");
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const refresh = () => {
+      if (timer) return;
+      timer = setTimeout(() => {
+        timer = null;
+        fetch("/api/events")
+          .then(res => (res.ok ? (res.json() as Promise<IEvent[]>) : null))
+          .then(data => {
+            if (Array.isArray(data)) setLocalEvents(data);
+          })
+          .catch(() => {});
+      }, 120);
+    };
+
+    source.onmessage = event => {
+      if (event.data === "changed") refresh();
+    };
+
+    return () => {
+      if (timer) clearTimeout(timer);
+      source.close();
+    };
+  }, []);
+
   const handleSelectDate = useCallback((date: Date | undefined) => {
     if (!date) return;
     setSelectedDate(date);

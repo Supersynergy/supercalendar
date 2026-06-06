@@ -6,6 +6,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 ## [Unreleased]
 
 ### Added
+- **Live cross-device sync** — Server-Sent Events stream (`GET /api/events/stream`) pushes a change tick on every mutation; connected devices re-pull and update in real time, no refresh. In-process bus (single instance; back with Redis/Turso streams for multi-instance).
 - **Cross-device persistence** — events now live in a shared **SQLite/libSQL store** (Drizzle) behind REST route handlers (`GET`/`POST /api/events`, `PATCH`/`DELETE /api/events/:id`). The server seeds demo data on first boot; every device hitting the deployment sees the same calendar. Point `DATABASE_URL` at Turso for cloud sync (see `.env.example`).
 - **Delete events** — destructive action in the event details dialog (was missing; CRUD is now complete). Optimistic with rollback.
 - **Event create/edit/drag are optimistic** — UI updates instantly, then persists to the store in the background (`use-add-event` / `use-update-event` / `use-delete-event`).
