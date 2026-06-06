@@ -5,19 +5,28 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
 ## [Unreleased]
 
-### Performance
-- **Instant view switching** — the active view (day/week/month/year/agenda) is now client-side state in `CalendarProvider`, synced to the URL via `history.pushState` instead of Next.js route navigation. No RSC roundtrip or `ClientContainer` remount on switch — all views + events are already in memory → instant. Browser back/forward stays in sync via `popstate`; deep-links to each `/*-view` still work.
-
 ### Added
+- **Cross-device persistence** — events now live in a shared **SQLite/libSQL store** (Drizzle) behind REST route handlers (`GET`/`POST /api/events`, `PATCH`/`DELETE /api/events/:id`). The server seeds demo data on first boot; every device hitting the deployment sees the same calendar. Point `DATABASE_URL` at Turso for cloud sync (see `.env.example`).
+- **Live cross-device sync** — Server-Sent Events stream (`GET /api/events/stream`) pushes a change tick on every mutation; connected devices re-pull and update in real time, no refresh. In-process bus (single instance; back with Redis/Turso streams for multi-instance).
+- **Delete events** — destructive action in the event details dialog (CRUD is now complete). Optimistic with rollback.
+- **Event create/edit/drag are optimistic** — UI updates instantly, then persists to the store in the background (`use-add-event` / `use-update-event` / `use-delete-event`).
+- **Internationalization** — display language switch in Calendar settings covering **50 languages**. Dates, month/weekday names, week-start and ordinals localize via date-fns `setDefaultOptions`; **RTL** languages (Arabic, Hebrew, Persian) flip `document.dir` automatically. UI strings translated for **English + German** (others fall back to English; structure in `src/calendar/i18n/`).
+- **12h/24h time-format toggle** in Calendar settings — persisted to `localStorage`, applied across every view, the now-line, hour axis, badges and all time inputs (`hourCycle` follows the setting).
+- **Keyboard shortcuts in the event details dialog** — `↑`/`↓` navigate prev/next event in place, `E` opens Edit. On-screen hint in the footer.
 - **Agenda smart menu** — the agenda list is a content menu, not a drag surface: text is selectable, descriptions **auto-linkify** (URLs / emails / phone numbers), each event has a **quick-actions** popover (Details / Bearbeiten / Duplizieren / Link kopieren / Löschen), **multi-select** via checkboxes with a bulk bar (select-all / delete / **export .ics**), and **inline title rename** (double-click). The event-details dialog description also linkifies.
 - `Linkify` component (zero-dep auto-linker) and `ics.ts` (RFC 5545 `.ics` export).
 
-### Fixed
-- **Dialog open animation** — replaced shadcn's `slide-in-from-left-1/2` (the `1/2` fraction utilities don't generate under Tailwind v4, so dialogs flew in from the top-left) with custom keyframes: a centered fade + subtle rise-from-bottom + scale (`ss-dialog-in`, ease-out). Applies to every dialog.
-- **"Link kopieren"** now works reliably — `navigator.clipboard` with an `execCommand` fallback when the async API rejects (no focus / permission), plus a "Kopiert ✓" confirmation.
+### Performance
+- **Instant view switching** — the active view (day/week/month/year/agenda) is now client-side state in `CalendarProvider`, synced to the URL via `history.pushState` instead of Next.js route navigation. No RSC roundtrip or `ClientContainer` remount on switch — all views + events are already in memory → instant. Browser back/forward stays in sync via `popstate`; deep-links to each `/*-view` still work.
 
 ### Changed
-- Agenda card: the **title opens the details dialog** (single click); inline rename moved into the actions menu ("Umbenennen") to avoid an unreliable dialog-inside-popover. `?event=<id>` deep-links highlight + scroll to the event.
+- Header subtitle → **"by SuperSynergy"**; removed the upstream author's X link (attribution remains in `LICENSE`/`NOTICE`).
+- Agenda card: the **title opens the details dialog** (single click); inline rename moved into the actions menu ("Umbenennen"). `?event=<id>` deep-links highlight + scroll to the event.
+
+### Fixed
+- **Dialog open animation** — replaced shadcn's `slide-in-from-left-1/2` (the `1/2` fraction utilities don't generate under Tailwind v4, so dialogs flew in from the top-left) with custom keyframes: a centered fade + subtle rise-from-bottom + scale (`ss-dialog-in`, ease-out). Applies to every dialog.
+- **Dialog text is selectable** — pointer-down inside `DialogContent` no longer bubbles through the React portal to the dnd-kit drag listeners, so selecting text never arms a drag.
+- **"Link kopieren"** works reliably — `navigator.clipboard` with an `execCommand` fallback when the async API rejects, plus a "Kopiert ✓" confirmation.
 
 ## [2.0.1] — 2026-06-05
 

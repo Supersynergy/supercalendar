@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import type { TimeValue } from "react-aria-components";
 import { useForm } from "react-hook-form";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { useAddEvent } from "@/calendar/hooks/use-add-event";
 import type { TEventFormData } from "@/calendar/schemas";
 import { eventSchema } from "@/calendar/schemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -26,7 +27,8 @@ interface IProps {
 }
 
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
-  const { users } = useCalendar();
+  const { users, use24HourFormat, t } = useCalendar();
+  const { addEvent } = useAddEvent();
 
   const { isOpen, onClose, onToggle } = useDisclosure();
 
@@ -40,8 +42,25 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     },
   });
 
-  const onSubmit = (_values: TEventFormData) => {
-    // TO DO: Create use-add-event hook
+  const onSubmit = (values: TEventFormData) => {
+    const user = users.find(u => u.id === values.user);
+    if (!user) throw new Error("User not found");
+
+    const startDateTime = new Date(values.startDate);
+    startDateTime.setHours(values.startTime.hour, values.startTime.minute);
+
+    const endDateTime = new Date(values.endDate);
+    endDateTime.setHours(values.endTime.hour, values.endTime.minute);
+
+    addEvent({
+      user,
+      title: values.title,
+      color: values.color,
+      description: values.description,
+      startDate: startDateTime.toISOString(),
+      endDate: endDateTime.toISOString(),
+    });
+
     onClose();
     form.reset();
   };
@@ -59,7 +78,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Event</DialogTitle>
+          <DialogTitle>{t("dialog.addEvent")}</DialogTitle>
           <DialogDescription>
             <AlertTriangle className="mr-1 inline-block size-4 text-yellow-500" />
             This form is for demonstration purposes only and will not actually create an event. In a real application, submit the form to the backend API to
@@ -74,11 +93,11 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name="user"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Responsible</FormLabel>
+                  <FormLabel>{t("event.responsible")}</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
+                        <SelectValue placeholder={t("dialog.selectOption")} />
                       </SelectTrigger>
 
                       <SelectContent>
@@ -107,10 +126,10 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name="title"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel htmlFor="title">Title</FormLabel>
+                  <FormLabel htmlFor="title">{t("dialog.title")}</FormLabel>
 
                   <FormControl>
-                    <Input id="title" placeholder="Enter a title" data-invalid={fieldState.invalid} {...field} />
+                    <Input id="title" placeholder={t("dialog.enterTitle")} data-invalid={fieldState.invalid} {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -124,7 +143,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 name="startDate"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel htmlFor="startDate">Start Date</FormLabel>
+                    <FormLabel htmlFor="startDate">{t("event.startDate")}</FormLabel>
 
                     <FormControl>
                       <SingleDayPicker
@@ -146,10 +165,15 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 name="startTime"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Start Time</FormLabel>
+                    <FormLabel>{t("dialog.startTime")}</FormLabel>
 
                     <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
+                      <TimeInput
+                        value={field.value as TimeValue}
+                        onChange={field.onChange}
+                        hourCycle={use24HourFormat ? 24 : 12}
+                        data-invalid={fieldState.invalid}
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -164,7 +188,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 name="endDate"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>{t("event.endDate")}</FormLabel>
                     <FormControl>
                       <SingleDayPicker
                         value={field.value}
@@ -183,10 +207,15 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
                 name="endTime"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>End Time</FormLabel>
+                    <FormLabel>{t("dialog.endTime")}</FormLabel>
 
                     <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
+                      <TimeInput
+                        value={field.value as TimeValue}
+                        onChange={field.onChange}
+                        hourCycle={use24HourFormat ? 24 : 12}
+                        data-invalid={fieldState.invalid}
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -200,11 +229,11 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name="color"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>{t("dialog.color")}</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
+                        <SelectValue placeholder={t("dialog.selectOption")} />
                       </SelectTrigger>
 
                       <SelectContent>
@@ -269,7 +298,7 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
               name="description"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("event.description")}</FormLabel>
 
                   <FormControl>
                     <Textarea {...field} value={field.value} data-invalid={fieldState.invalid} />
@@ -285,12 +314,12 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
         <DialogFooter>
           <DialogClose asChild>
             <Button type="button" variant="outline">
-              Cancel
+              {t("dialog.cancel")}
             </Button>
           </DialogClose>
 
           <Button form="event-form" type="submit">
-            Create Event
+            {t("dialog.create")}
           </Button>
         </DialogFooter>
       </DialogContent>

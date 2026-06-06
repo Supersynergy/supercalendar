@@ -9,6 +9,7 @@ import { useState } from "react";
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
 import { Linkify } from "@/calendar/components/linkify";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { timePattern } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -57,7 +58,7 @@ interface IProps {
 }
 
 export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, selected, onToggleSelect, onDuplicate, onDelete, onUpdateTitle }: IProps) {
-  const { badgeVariant } = useCalendar();
+  const { badgeVariant, use24HourFormat } = useCalendar();
 
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(event.title);
@@ -173,7 +174,7 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, select
         <div className="flex items-center gap-1">
           <Clock className="size-3 shrink-0" />
           <p className="text-xs text-foreground">
-            {format(startDate, "h:mm a")} - {format(endDate, "h:mm a")}
+            {format(startDate, timePattern(use24HourFormat))} - {format(endDate, timePattern(use24HourFormat))}
           </p>
         </div>
 

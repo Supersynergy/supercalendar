@@ -6,7 +6,7 @@ import { CalendarTimeline } from "@/calendar/components/week-and-day-view/calend
 import { EventBlock } from "@/calendar/components/week-and-day-view/event-block";
 import { WeekViewMultiDayEventsRow } from "@/calendar/components/week-and-day-view/week-view-multi-day-events-row";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-import { getEventBlockStyle, getVisibleHours, groupEvents, isWorkingHour } from "@/calendar/helpers";
+import { getEventBlockStyle, getVisibleHours, groupEvents, hourLabelPattern, isWorkingHour } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
@@ -17,7 +17,7 @@ interface IProps {
 }
 
 export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
-  const { selectedDate, workingHours, visibleHours } = useCalendar();
+  const { selectedDate, workingHours, visibleHours, use24HourFormat } = useCalendar();
 
   const { hours, earliestEventHour, latestEventHour } = useMemo(() => getVisibleHours(visibleHours, singleDayEvents), [visibleHours, singleDayEvents]);
 
@@ -67,7 +67,9 @@ export function CalendarWeekView({ singleDayEvents, multiDayEvents }: IProps) {
               {hours.map((hour, index) => (
                 <div key={hour} className="relative" style={{ height: "96px" }}>
                   <div className="absolute -top-3 right-2 flex h-6 items-center">
-                    {index !== 0 && <span className="text-xs text-muted-foreground">{format(new Date().setHours(hour, 0, 0, 0), "hh a")}</span>}
+                    {index !== 0 && (
+                      <span className="text-xs text-muted-foreground">{format(new Date().setHours(hour, 0, 0, 0), hourLabelPattern(use24HourFormat))}</span>
+                    )}
                   </div>
                 </div>
               ))}

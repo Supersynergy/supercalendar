@@ -34,8 +34,12 @@ const DialogContent = React.forwardRef<React.ElementRef<typeof DialogPrimitive.C
       <DialogOverlay />
       <DialogPrimitive.Content
         ref={ref}
+        // Stop pointer-down from bubbling through the React portal to ancestor
+        // dnd-kit drag listeners, so selecting text inside the dialog never
+        // arms a drag. Also keep the content text-selectable.
+        onPointerDown={e => e.stopPropagation()}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background p-6 shadow-lg will-change-transform data-[state=open]:animate-[ss-dialog-in_240ms_cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:animate-[ss-dialog-out_160ms_ease-in] sm:rounded-lg",
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] select-text gap-4 border bg-background p-6 shadow-lg will-change-transform data-[state=open]:animate-[ss-dialog-in_240ms_cubic-bezier(0.16,1,0.3,1)] data-[state=closed]:animate-[ss-dialog-out_160ms_ease-in] sm:rounded-lg",
           className
         )}
         {...props}

@@ -274,3 +274,13 @@ export function getMonthCellEvents(date: Date, events: IEvent[], eventPositions:
       return a.position - b.position;
     });
 }
+
+// date-fns time pattern honoring the 12h/24h display preference.
+export function timePattern(use24HourFormat: boolean): string {
+  return use24HourFormat ? "HH:mm" : "h:mm a";
+}
+
+// Hour-axis label pattern for the week/day grid.
+export function hourLabelPattern(use24HourFormat: boolean): string {
+  return use24HourFormat ? "HH:00" : "hh a";
+}

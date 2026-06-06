@@ -14,6 +14,7 @@ import { CalendarYearView } from "@/calendar/components/year-view/calendar-year-
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 
 export function ClientContainer() {
+  // view is owned by the context (instant client-side switching + URL sync).
   const { selectedDate, selectedUserId, events, view } = useCalendar();
 
   const filteredEvents = useMemo(() => {
@@ -93,6 +94,7 @@ export function ClientContainer() {
       <CalendarHeader view={view} events={filteredEvents} />
 
       <DndProviderWrapper>
+        {/* Views are picked from already-computed client state — instant swap, no animation, no round-trip. */}
         {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
         {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
         {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}

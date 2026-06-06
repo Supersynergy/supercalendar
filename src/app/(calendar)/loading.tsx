@@ -1,5 +1,8 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+// View-agnostic loading shell: mirrors the calendar chrome (toolbar + framed
+// content) without faking a month grid, so it stays neutral for every view and
+// the swap to real content has no layout jump.
 export default function Loading() {
   return (
     <div className="mx-auto flex max-w-(--breakpoint-2xl) flex-col gap-4 px-8 py-4">
@@ -15,11 +18,7 @@ export default function Loading() {
           </div>
         </div>
 
-        <div className="grid grid-cols-7 gap-px p-2">
-          {Array.from({ length: 35 }).map((_, index) => (
-            <Skeleton key={`cell-${index}`} className="h-24 w-full rounded-md" />
-          ))}
-        </div>
+        <div className="h-[640px] w-full" />
       </div>
     </div>
   );
