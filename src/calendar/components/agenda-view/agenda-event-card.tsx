@@ -6,7 +6,6 @@ import { format, parseISO } from "date-fns";
 import { Check, Clock, Copy, Link2, MoreVertical, Pencil, Text, Trash2, User } from "lucide-react";
 import { useState } from "react";
 
-import { EditEventDialog } from "@/calendar/components/dialogs/edit-event-dialog";
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
 import { Linkify } from "@/calendar/components/linkify";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
@@ -62,6 +61,7 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, select
 
   const [editing, setEditing] = useState(false);
   const [draftTitle, setDraftTitle] = useState(event.title);
+  const [copied, setCopied] = useState(false);
 
   const startDate = parseISO(event.startDate);
   const endDate = parseISO(event.endDate);
@@ -75,13 +75,42 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, select
     setEditing(false);
   };
 
-  const copyLink = () => {
+  const copyLink = async () => {
     const url = `${window.location.origin}/agenda-view?event=${event.id}`;
-    navigator.clipboard?.writeText(url);
+
+    let ok = false;
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+        ok = true;
+      }
+    } catch {
+      ok = false; // clipboard API can reject without focus / permission — fall through
+    }
+
+    if (!ok) {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        ta.style.position = "fixed";
+        ta.style.opacity = "0";
+        document.body.appendChild(ta);
+        ta.select();
+        ok = document.execCommand("copy");
+        ta.remove();
+      } catch {
+        ok = false;
+      }
+    }
+
+    if (ok) {
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1500);
+    }
   };
 
   return (
-    <div className={cn(agendaEventCardVariants({ color }), selected && "ring-2 ring-ring")}>
+    <div data-event-id={event.id} className={cn(agendaEventCardVariants({ color }), "transition-shadow", selected && "ring-2 ring-ring")}>
       {onToggleSelect && (
         <button
           type="button"
@@ -127,17 +156,11 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, select
                   Day {eventCurrentDay} of {eventTotalDays} •{" "}
                 </span>
               )}
-              <button
-                type="button"
-                className="cursor-text select-text text-left font-medium"
-                title="Double-click to rename"
-                onDoubleClick={() => {
-                  setDraftTitle(event.title);
-                  setEditing(true);
-                }}
-              >
-                {event.title}
-              </button>
+              <EventDetailsDialog event={event}>
+                <button type="button" className="text-left font-medium hover:underline" title="Details öffnen">
+                  {event.title}
+                </button>
+              </EventDetailsDialog>
             </p>
           )}
         </div>
@@ -170,28 +193,26 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays, select
         </PopoverTrigger>
 
         <PopoverContent align="end" className="w-48 p-1">
-          <EventDetailsDialog event={event}>
-            <button type="button" className={actionItemClasses}>
-              <Text />
-              Details
-            </button>
-          </EventDetailsDialog>
-
-          <EditEventDialog event={event}>
-            <button type="button" className={actionItemClasses}>
-              <Pencil />
-              Bearbeiten
-            </button>
-          </EditEventDialog>
+          <button
+            type="button"
+            className={actionItemClasses}
+            onClick={() => {
+              setDraftTitle(event.title);
+              setEditing(true);
+            }}
+          >
+            <Pencil />
+            Umbenennen
+          </button>
 
           <button type="button" className={actionItemClasses} onClick={() => onDuplicate?.(event.id)}>
             <Copy />
             Duplizieren
           </button>
 
-          <button type="button" className={actionItemClasses} onClick={copyLink}>
-            <Link2 />
-            Link kopieren
+          <button type="button" className={cn(actionItemClasses, copied && "text-green-600")} onClick={copyLink}>
+            {copied ? <Check /> : <Link2 />}
+            {copied ? "Kopiert ✓" : "Link kopieren"}
           </button>
 
           <button type="button" className={cn(actionItemClasses, "text-red-600 hover:bg-red-50 dark:hover:bg-red-950")} onClick={() => onDelete?.(event.id)}>

@@ -12,6 +12,13 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 - **Agenda smart menu** — the agenda list is a content menu, not a drag surface: text is selectable, descriptions **auto-linkify** (URLs / emails / phone numbers), each event has a **quick-actions** popover (Details / Bearbeiten / Duplizieren / Link kopieren / Löschen), **multi-select** via checkboxes with a bulk bar (select-all / delete / **export .ics**), and **inline title rename** (double-click). The event-details dialog description also linkifies.
 - `Linkify` component (zero-dep auto-linker) and `ics.ts` (RFC 5545 `.ics` export).
 
+### Fixed
+- **Dialog open animation** — replaced shadcn's `slide-in-from-left-1/2` (the `1/2` fraction utilities don't generate under Tailwind v4, so dialogs flew in from the top-left) with custom keyframes: a centered fade + subtle rise-from-bottom + scale (`ss-dialog-in`, ease-out). Applies to every dialog.
+- **"Link kopieren"** now works reliably — `navigator.clipboard` with an `execCommand` fallback when the async API rejects (no focus / permission), plus a "Kopiert ✓" confirmation.
+
+### Changed
+- Agenda card: the **title opens the details dialog** (single click); inline rename moved into the actions menu ("Umbenennen") to avoid an unreliable dialog-inside-popover. `?event=<id>` deep-links highlight + scroll to the event.
+
 ## [2.0.1] — 2026-06-05
 
 ### Fixed

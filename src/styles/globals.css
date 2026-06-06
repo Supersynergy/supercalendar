@@ -173,3 +173,45 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Modal / dialog motion — fade + subtle rise + scale, centered.
+   Replaces shadcn's `slide-in-from-left-1/2` (the 1/2 fraction utilities don't
+   generate under Tailwind v4, which made dialogs fly in from the top-left).
+   Centering stays on the element's translate utilities; we animate `transform`
+   (composes with v4's individual transform properties) + opacity. */
+@keyframes ss-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes ss-dialog-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}
+@keyframes ss-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes ss-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

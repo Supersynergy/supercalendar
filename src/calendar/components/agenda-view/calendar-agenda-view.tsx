@@ -2,7 +2,7 @@
 
 import { endOfDay, format, isSameMonth, parseISO, startOfDay } from "date-fns";
 import { CalendarX2, Download, Trash2, X } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { AgendaDayGroup } from "@/calendar/components/agenda-view/agenda-day-group";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
 import { downloadICS } from "@/calendar/ics";
@@ -19,6 +19,17 @@ export function CalendarAgendaView({ singleDayEvents, multiDayEvents }: IProps) 
   const { selectedDate, events, setLocalEvents } = useCalendar();
 
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+
+  // Deep-link: /agenda-view?event=<id> (from "Link kopieren") highlights + scrolls to it.
+  useEffect(() => {
+    const id = Number(new URLSearchParams(window.location.search).get("event"));
+    if (!id) return;
+    setSelectedIds(new Set([id]));
+    const timer = window.setTimeout(() => {
+      document.querySelector(`[data-event-id="${id}"]`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+    return () => window.clearTimeout(timer);
+  }, []);
 
   const eventsByDay = useMemo(() => {
     const allDates = new Map<string, { date: Date; events: IEvent[]; multiDayEvents: IEvent[] }>();
