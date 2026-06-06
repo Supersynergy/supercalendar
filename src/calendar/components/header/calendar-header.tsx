@@ -1,7 +1,6 @@
 "use client";
 
 import { CalendarRange, Columns, Grid2x2, Grid3x3, List, Plus } from "lucide-react";
-import Link from "next/link";
 import { AddEventDialog } from "@/calendar/components/dialogs/add-event-dialog";
 import { DateNavigator } from "@/calendar/components/header/date-navigator";
 import { TodayButton } from "@/calendar/components/header/today-button";
@@ -14,9 +13,10 @@ import { Button } from "@/components/ui/button";
 interface IProps {
   view: TCalendarView;
   events: IEvent[];
+  onViewChange: (view: TCalendarView) => void;
 }
 
-export function CalendarHeader({ view, events }: IProps) {
+export function CalendarHeader({ view, events, onViewChange }: IProps) {
   const { t } = useCalendar();
 
   return (
@@ -29,58 +29,59 @@ export function CalendarHeader({ view, events }: IProps) {
       <div className="flex flex-col items-center gap-1.5 sm:flex-row sm:justify-between">
         <div className="flex w-full items-center gap-1.5">
           <div className="inline-flex first:rounded-r-none last:rounded-l-none [&:not(:first-child):not(:last-child)]:rounded-none">
-            <Button asChild aria-label={t("view.day")} size="icon" variant={view === "day" ? "default" : "outline"} className="rounded-r-none [&_svg]:size-5">
-              <Link href="/day-view">
-                <List strokeWidth={1.8} />
-              </Link>
+            <Button
+              type="button"
+              onClick={() => onViewChange("day")}
+              aria-label={t("view.day")}
+              size="icon"
+              variant={view === "day" ? "default" : "outline"}
+              className="rounded-r-none [&_svg]:size-5"
+            >
+              <List strokeWidth={1.8} />
             </Button>
 
             <Button
-              asChild
+              type="button"
+              onClick={() => onViewChange("week")}
               aria-label={t("view.week")}
               size="icon"
               variant={view === "week" ? "default" : "outline"}
               className="-ml-px rounded-none [&_svg]:size-5"
             >
-              <Link href="/week-view">
-                <Columns strokeWidth={1.8} />
-              </Link>
+              <Columns strokeWidth={1.8} />
             </Button>
 
             <Button
-              asChild
+              type="button"
+              onClick={() => onViewChange("month")}
               aria-label={t("view.month")}
               size="icon"
               variant={view === "month" ? "default" : "outline"}
               className="-ml-px rounded-none [&_svg]:size-5"
             >
-              <Link href="/month-view">
-                <Grid2x2 strokeWidth={1.8} />
-              </Link>
+              <Grid2x2 strokeWidth={1.8} />
             </Button>
 
             <Button
-              asChild
+              type="button"
+              onClick={() => onViewChange("year")}
               aria-label={t("view.year")}
               size="icon"
               variant={view === "year" ? "default" : "outline"}
               className="-ml-px rounded-none [&_svg]:size-5"
             >
-              <Link href="/year-view">
-                <Grid3x3 strokeWidth={1.8} />
-              </Link>
+              <Grid3x3 strokeWidth={1.8} />
             </Button>
 
             <Button
-              asChild
+              type="button"
+              onClick={() => onViewChange("agenda")}
               aria-label={t("view.agenda")}
               size="icon"
               variant={view === "agenda" ? "default" : "outline"}
               className="-ml-px rounded-l-none [&_svg]:size-5"
             >
-              <Link href="/agenda-view">
-                <CalendarRange strokeWidth={1.8} />
-              </Link>
+              <CalendarRange strokeWidth={1.8} />
             </Button>
           </div>
 

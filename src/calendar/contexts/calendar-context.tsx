@@ -93,11 +93,36 @@ export function CalendarProvider({ children, users, events }: { children: React.
 
   const t = useCallback<TranslateFn>(key => translate(localeCode, key), [localeCode]);
 
-  // This localEvents doesn't need to exists in a real scenario.
-  // It's used here just to simulate the update of the events.
-  // In a real scenario, the events would be updated in the backend
-  // and the request that fetches the events should be refetched
-  const [localEvents, setLocalEvents] = useState<IEvent[]>(events);
+  // Events are seeded from the server and then owned client-side. Any mutation
+  // (add/edit) is persisted to localStorage so it survives reloads — standing in
+  // for a backend. On a real app, replace this with API calls + refetch.
+  const [localEvents, setLocalEventsState] = useState<IEvent[]>(events);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("supercalendar:events");
+    if (!stored) return;
+    try {
+      const parsed = JSON.parse(stored) as IEvent[];
+      if (Array.isArray(parsed)) setLocalEventsState(parsed);
+    } catch {
+      // Corrupt cache — drop it and keep the server seed.
+      window.localStorage.removeItem("supercalendar:events");
+    }
+  }, []);
+
+  // Persisting setter: every mutation writes through to localStorage. The
+  // initial server seed is NOT persisted until something actually changes it.
+  const setLocalEvents = useCallback<Dispatch<SetStateAction<IEvent[]>>>(action => {
+    setLocalEventsState(prev => {
+      const next = typeof action === "function" ? (action as (p: IEvent[]) => IEvent[])(prev) : action;
+      try {
+        window.localStorage.setItem("supercalendar:events", JSON.stringify(next));
+      } catch {
+        // Storage full / unavailable — keep in-memory state regardless.
+      }
+      return next;
+    });
+  }, []);
 
   const handleSelectDate = useCallback((date: Date | undefined) => {
     if (!date) return;

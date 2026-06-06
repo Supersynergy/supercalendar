@@ -1,7 +1,7 @@
 "use client";
 
 import { isSameDay, parseISO } from "date-fns";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CalendarAgendaView } from "@/calendar/components/agenda-view/calendar-agenda-view";
 
 import { DndProviderWrapper } from "@/calendar/components/dnd/dnd-provider";
@@ -19,8 +19,28 @@ interface IProps {
   view: TCalendarView;
 }
 
-export function ClientContainer({ view }: IProps) {
+export function ClientContainer({ view: initialView }: IProps) {
   const { selectedDate, selectedUserId, events } = useCalendar();
+
+  // View lives in client state so switching is instant — no route round-trip,
+  // no loading skeleton. The route only seeds the initial view; we keep the URL
+  // in sync shallowly so refresh/share still land on the right view.
+  const [view, setView] = useState<TCalendarView>(initialView);
+
+  const changeView = useCallback((next: TCalendarView) => {
+    setView(next);
+    window.history.replaceState(null, "", `/${next}-view`);
+  }, []);
+
+  // Reflect browser back/forward (which only changes the URL, not React state).
+  useEffect(() => {
+    const sync = () => {
+      const match = window.location.pathname.match(/^\/(day|week|month|year|agenda)-view/);
+      if (match) setView(match[1] as TCalendarView);
+    };
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
 
   const filteredEvents = useMemo(() => {
     return events.filter(event => {
@@ -96,17 +116,15 @@ export function ClientContainer({ view }: IProps) {
 
   return (
     <div className="overflow-hidden rounded-xl border">
-      <CalendarHeader view={view} events={filteredEvents} />
+      <CalendarHeader view={view} events={filteredEvents} onViewChange={changeView} />
 
       <DndProviderWrapper>
-        {/* Keyed so switching views cross-fades quickly instead of hard-cutting. */}
-        <div key={view} className="duration-150 animate-in fade-in-0">
-          {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-          {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-          {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-          {view === "year" && <CalendarYearView allEvents={eventStartDates} />}
-          {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        </div>
+        {/* Views are picked from already-computed client state — instant swap, no animation, no round-trip. */}
+        {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {view === "year" && <CalendarYearView allEvents={eventStartDates} />}
+        {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
       </DndProviderWrapper>
     </div>
   );

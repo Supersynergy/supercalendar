@@ -6,11 +6,14 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 ## [Unreleased]
 
 ### Added
+- **Event creation works** — the Add Event dialog now persists a real event (`use-add-event`) instead of being a no-op demo.
+- **Events persist across reloads** — all events are stored in `localStorage` (write-through on every add/edit); the server seed loads on first visit, your changes survive after.
 - **Internationalization** — display language switch in Calendar settings covering **50 languages**. Dates, month/weekday names, week-start and ordinals localize via date-fns `setDefaultOptions`; **RTL** languages (Arabic, Hebrew, Persian) flip `document.dir` automatically. UI strings translated for **English + German** (others fall back to English; structure in `src/calendar/i18n/`).
 - **12h/24h time-format toggle** in Calendar settings — persisted to `localStorage`, applied across every view, the now-line, hour axis, badges and all time inputs (`hourCycle` follows the setting).
 - **Keyboard shortcuts in the event details dialog** — `↑`/`↓` navigate prev/next event in place, `E` opens Edit. On-screen hint in the footer.
 
 ### Changed
+- **Instant view switching** — day/week/month/year/agenda now swap from client state with no route round-trip, no loading skeleton, no animation. The URL stays in sync (shallow `replaceState`) and back/forward still work.
 - **Event details dialog** — fast centered fade-in (150ms) instead of the slide-from-top-left entrance.
 - Header subtitle → **"by SuperSynergy"**; removed the upstream author's X link (attribution remains in `LICENSE`/`NOTICE`).
 

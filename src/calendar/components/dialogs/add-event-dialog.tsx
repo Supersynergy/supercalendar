@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import type { TimeValue } from "react-aria-components";
 import { useForm } from "react-hook-form";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { useAddEvent } from "@/calendar/hooks/use-add-event";
 import type { TEventFormData } from "@/calendar/schemas";
 import { eventSchema } from "@/calendar/schemas";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -27,6 +28,7 @@ interface IProps {
 
 export function AddEventDialog({ children, startDate, startTime }: IProps) {
   const { users, use24HourFormat, t } = useCalendar();
+  const { addEvent } = useAddEvent();
 
   const { isOpen, onClose, onToggle } = useDisclosure();
 
@@ -40,8 +42,25 @@ export function AddEventDialog({ children, startDate, startTime }: IProps) {
     },
   });
 
-  const onSubmit = (_values: TEventFormData) => {
-    // TO DO: Create use-add-event hook
+  const onSubmit = (values: TEventFormData) => {
+    const user = users.find(u => u.id === values.user);
+    if (!user) throw new Error("User not found");
+
+    const startDateTime = new Date(values.startDate);
+    startDateTime.setHours(values.startTime.hour, values.startTime.minute);
+
+    const endDateTime = new Date(values.endDate);
+    endDateTime.setHours(values.endTime.hour, values.endTime.minute);
+
+    addEvent({
+      user,
+      title: values.title,
+      color: values.color,
+      description: values.description,
+      startDate: startDateTime.toISOString(),
+      endDate: endDateTime.toISOString(),
+    });
+
     onClose();
     form.reset();
   };
