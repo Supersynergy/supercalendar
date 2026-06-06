@@ -99,11 +99,14 @@ export function ClientContainer({ view }: IProps) {
       <CalendarHeader view={view} events={filteredEvents} />
 
       <DndProviderWrapper>
-        {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
-        {view === "year" && <CalendarYearView allEvents={eventStartDates} />}
-        {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        {/* Keyed so switching views cross-fades quickly instead of hard-cutting. */}
+        <div key={view} className="duration-150 animate-in fade-in-0">
+          {view === "day" && <CalendarDayView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+          {view === "month" && <CalendarMonthView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+          {view === "week" && <CalendarWeekView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+          {view === "year" && <CalendarYearView allEvents={eventStartDates} />}
+          {view === "agenda" && <CalendarAgendaView singleDayEvents={singleDayEvents} multiDayEvents={multiDayEvents} />}
+        </div>
       </DndProviderWrapper>
     </div>
   );

@@ -1,5 +1,7 @@
 import { Settings } from "lucide-react";
 import { ChangeBadgeVariantInput } from "@/calendar/components/change-badge-variant-input";
+import { ChangeLanguageInput } from "@/calendar/components/change-language-input";
+import { ChangeTimeFormatInput } from "@/calendar/components/change-time-format-input";
 import { ChangeVisibleHoursInput } from "@/calendar/components/change-visible-hours-input";
 import { ChangeWorkingHoursInput } from "@/calendar/components/change-working-hours-input";
 import { CalendarProvider } from "@/calendar/contexts/calendar-context";
@@ -25,6 +27,8 @@ export default async function Layout({ children }: { children: React.ReactNode }
 
             <AccordionContent>
               <div className="mt-4 flex flex-col gap-6">
+                <ChangeLanguageInput />
+                <ChangeTimeFormatInput />
                 <ChangeBadgeVariantInput />
                 <ChangeVisibleHoursInput />
                 <ChangeWorkingHoursInput />

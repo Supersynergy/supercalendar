@@ -1,5 +1,7 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { timePattern } from "@/calendar/helpers";
 
 interface IProps {
   firstVisibleHour: number;
@@ -7,6 +9,7 @@ interface IProps {
 }
 
 export function CalendarTimeline({ firstVisibleHour, lastVisibleHour }: IProps) {
+  const { use24HourFormat } = useCalendar();
   const [currentTime, setCurrentTime] = useState(new Date());
 
   useEffect(() => {
@@ -25,7 +28,7 @@ export function CalendarTimeline({ firstVisibleHour, lastVisibleHour }: IProps) 
   };
 
   const formatCurrentTime = () => {
-    return format(currentTime, "h:mm a");
+    return format(currentTime, timePattern(use24HourFormat));
   };
 
   const currentHour = currentTime.getHours();

@@ -7,6 +7,7 @@ import { Clock, Text, User } from "lucide-react";
 
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { timePattern } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 
 const agendaEventCardVariants = cva(
@@ -46,7 +47,7 @@ interface IProps {
 }
 
 export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IProps) {
-  const { badgeVariant } = useCalendar();
+  const { badgeVariant, use24HourFormat } = useCalendar();
 
   const startDate = parseISO(event.startDate);
   const endDate = parseISO(event.endDate);
@@ -91,7 +92,7 @@ export function AgendaEventCard({ event, eventCurrentDay, eventTotalDays }: IPro
           <div className="flex items-center gap-1">
             <Clock className="size-3 shrink-0" />
             <p className="text-xs text-foreground">
-              {format(startDate, "h:mm a")} - {format(endDate, "h:mm a")}
+              {format(startDate, timePattern(use24HourFormat))} - {format(endDate, timePattern(use24HourFormat))}
             </p>
           </div>
 

@@ -9,7 +9,7 @@ import { TimeInput } from "@/components/ui/time-input";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function ChangeVisibleHoursInput() {
-  const { visibleHours, setVisibleHours } = useCalendar();
+  const { visibleHours, setVisibleHours, use24HourFormat, t } = useCalendar();
 
   const [from, setFrom] = useState<{ hour: number; minute: number }>({ hour: visibleHours.from, minute: 0 });
   const [to, setTo] = useState<{ hour: number; minute: number }>({ hour: visibleHours.to, minute: 0 });
@@ -22,7 +22,7 @@ export function ChangeVisibleHoursInput() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <p className="text-sm font-semibold">Change visible hours</p>
+        <p className="text-sm font-semibold">{t("settings.visibleHours")}</p>
 
         <TooltipProvider delayDuration={100}>
           <Tooltip>
@@ -39,9 +39,21 @@ export function ChangeVisibleHoursInput() {
 
       <div className="flex items-center gap-4">
         <p>From</p>
-        <TimeInput id="start-time" hourCycle={12} granularity="hour" value={from as TimeValue} onChange={setFrom as (value: TimeValue | null) => void} />
+        <TimeInput
+          id="start-time"
+          hourCycle={use24HourFormat ? 24 : 12}
+          granularity="hour"
+          value={from as TimeValue}
+          onChange={setFrom as (value: TimeValue | null) => void}
+        />
         <p>To</p>
-        <TimeInput id="end-time" hourCycle={12} granularity="hour" value={to as TimeValue} onChange={setTo as (value: TimeValue | null) => void} />
+        <TimeInput
+          id="end-time"
+          hourCycle={use24HourFormat ? 24 : 12}
+          granularity="hour"
+          value={to as TimeValue}
+          onChange={setTo as (value: TimeValue | null) => void}
+        />
       </div>
 
       <Button className="mt-4 w-fit" onClick={handleApply}>

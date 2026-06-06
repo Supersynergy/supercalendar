@@ -22,14 +22,27 @@ import { TimeInput } from "@/components/ui/time-input";
 import { useDisclosure } from "@/hooks/use-disclosure";
 
 interface IProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   event: IEvent;
+  // Optional controlled open state — lets parents (e.g. the details dialog's
+  // keyboard shortcut) open Edit without rendering a trigger.
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }
 
-export function EditEventDialog({ children, event }: IProps) {
-  const { isOpen, onClose, onToggle } = useDisclosure();
+export function EditEventDialog({ children, event, open: openProp, onOpenChange }: IProps) {
+  const disclosure = useDisclosure();
 
-  const { users } = useCalendar();
+  const isControlled = openProp !== undefined;
+  const isOpen = isControlled ? openProp : disclosure.isOpen;
+  const setOpen = (next: boolean) => {
+    if (isControlled) onOpenChange?.(next);
+    else if (next) disclosure.onOpen();
+    else disclosure.onClose();
+  };
+  const onClose = () => setOpen(false);
+
+  const { users, use24HourFormat, t } = useCalendar();
 
   const { updateEvent } = useUpdateEvent();
 
@@ -72,12 +85,12 @@ export function EditEventDialog({ children, event }: IProps) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onToggle}>
-      <DialogTrigger asChild>{children}</DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={setOpen}>
+      {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Edit Event</DialogTitle>
+          <DialogTitle>{t("dialog.editEvent")}</DialogTitle>
           <DialogDescription>
             <AlertTriangle className="mr-1 inline-block size-4 text-yellow-500" />
             This form only updates the current event state locally for demonstration purposes. If you move an event after editing, some inconsistencies may
@@ -92,11 +105,11 @@ export function EditEventDialog({ children, event }: IProps) {
               name="user"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Responsible</FormLabel>
+                  <FormLabel>{t("event.responsible")}</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
+                        <SelectValue placeholder={t("dialog.selectOption")} />
                       </SelectTrigger>
 
                       <SelectContent>
@@ -125,10 +138,10 @@ export function EditEventDialog({ children, event }: IProps) {
               name="title"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel htmlFor="title">Title</FormLabel>
+                  <FormLabel htmlFor="title">{t("dialog.title")}</FormLabel>
 
                   <FormControl>
-                    <Input id="title" placeholder="Enter a title" data-invalid={fieldState.invalid} {...field} />
+                    <Input id="title" placeholder={t("dialog.enterTitle")} data-invalid={fieldState.invalid} {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -142,7 +155,7 @@ export function EditEventDialog({ children, event }: IProps) {
                 name="startDate"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel htmlFor="startDate">Start Date</FormLabel>
+                    <FormLabel htmlFor="startDate">{t("event.startDate")}</FormLabel>
 
                     <FormControl>
                       <SingleDayPicker
@@ -164,10 +177,15 @@ export function EditEventDialog({ children, event }: IProps) {
                 name="startTime"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Start Time</FormLabel>
+                    <FormLabel>{t("dialog.startTime")}</FormLabel>
 
                     <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
+                      <TimeInput
+                        value={field.value as TimeValue}
+                        onChange={field.onChange}
+                        hourCycle={use24HourFormat ? 24 : 12}
+                        data-invalid={fieldState.invalid}
+                      />
                     </FormControl>
 
                     <FormMessage />
@@ -182,7 +200,7 @@ export function EditEventDialog({ children, event }: IProps) {
                 name="endDate"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>End Date</FormLabel>
+                    <FormLabel>{t("event.endDate")}</FormLabel>
                     <FormControl>
                       <SingleDayPicker
                         value={field.value}
@@ -201,9 +219,14 @@ export function EditEventDialog({ children, event }: IProps) {
                 name="endTime"
                 render={({ field, fieldState }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>End Time</FormLabel>
+                    <FormLabel>{t("dialog.endTime")}</FormLabel>
                     <FormControl>
-                      <TimeInput value={field.value as TimeValue} onChange={field.onChange} hourCycle={12} data-invalid={fieldState.invalid} />
+                      <TimeInput
+                        value={field.value as TimeValue}
+                        onChange={field.onChange}
+                        hourCycle={use24HourFormat ? 24 : 12}
+                        data-invalid={fieldState.invalid}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -216,11 +239,11 @@ export function EditEventDialog({ children, event }: IProps) {
               name="color"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Color</FormLabel>
+                  <FormLabel>{t("dialog.color")}</FormLabel>
                   <FormControl>
                     <Select value={field.value} onValueChange={field.onChange}>
                       <SelectTrigger data-invalid={fieldState.invalid}>
-                        <SelectValue placeholder="Select an option" />
+                        <SelectValue placeholder={t("dialog.selectOption")} />
                       </SelectTrigger>
 
                       <SelectContent>
@@ -285,7 +308,7 @@ export function EditEventDialog({ children, event }: IProps) {
               name="description"
               render={({ field, fieldState }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("event.description")}</FormLabel>
 
                   <FormControl>
                     <Textarea {...field} value={field.value} data-invalid={fieldState.invalid} />
@@ -301,12 +324,12 @@ export function EditEventDialog({ children, event }: IProps) {
         <DialogFooter>
           <DialogClose asChild>
             <Button type="button" variant="outline">
-              Cancel
+              {t("dialog.cancel")}
             </Button>
           </DialogClose>
 
           <Button form="event-form" type="submit">
-            Save changes
+            {t("dialog.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

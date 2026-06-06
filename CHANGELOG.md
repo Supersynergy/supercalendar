@@ -3,6 +3,20 @@
 All notable changes to SuperCalendar are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/); newest first.
 
+## [Unreleased]
+
+### Added
+- **Internationalization** — display language switch in Calendar settings covering **50 languages**. Dates, month/weekday names, week-start and ordinals localize via date-fns `setDefaultOptions`; **RTL** languages (Arabic, Hebrew, Persian) flip `document.dir` automatically. UI strings translated for **English + German** (others fall back to English; structure in `src/calendar/i18n/`).
+- **12h/24h time-format toggle** in Calendar settings — persisted to `localStorage`, applied across every view, the now-line, hour axis, badges and all time inputs (`hourCycle` follows the setting).
+- **Keyboard shortcuts in the event details dialog** — `↑`/`↓` navigate prev/next event in place, `E` opens Edit. On-screen hint in the footer.
+
+### Changed
+- **Event details dialog** — fast centered fade-in (150ms) instead of the slide-from-top-left entrance.
+- Header subtitle → **"by SuperSynergy"**; removed the upstream author's X link (attribution remains in `LICENSE`/`NOTICE`).
+
+### Fixed
+- **Dialog text is selectable again** — pointer-down inside `DialogContent` no longer bubbles through the React portal to the dnd-kit drag listeners, so selecting text never arms a drag.
+
 ## [2.0.1] — 2026-06-05
 
 ### Fixed

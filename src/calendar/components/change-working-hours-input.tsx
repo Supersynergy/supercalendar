@@ -20,7 +20,7 @@ const DAYS_OF_WEEK = [
 ];
 
 export function ChangeWorkingHoursInput() {
-  const { workingHours, setWorkingHours } = useCalendar();
+  const { workingHours, setWorkingHours, use24HourFormat, t } = useCalendar();
 
   const [localWorkingHours, setLocalWorkingHours] = useState({ ...workingHours });
 
@@ -65,7 +65,7 @@ export function ChangeWorkingHoursInput() {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <p className="text-sm font-semibold">Change working hours</p>
+        <p className="text-sm font-semibold">{t("settings.workingHours")}</p>
 
         <TooltipProvider delayDuration={100}>
           <Tooltip>
@@ -97,7 +97,7 @@ export function ChangeWorkingHoursInput() {
                     <span>From</span>
                     <TimeInput
                       id={`${day.name.toLowerCase()}-from`}
-                      hourCycle={12}
+                      hourCycle={use24HourFormat ? 24 : 12}
                       granularity="hour"
                       value={{ hour: localWorkingHours[day.index].from, minute: 0 } as TimeValue}
                       onChange={value => handleTimeChange(day.index, "from", value)}
@@ -108,7 +108,7 @@ export function ChangeWorkingHoursInput() {
                     <span>To</span>
                     <TimeInput
                       id={`${day.name.toLowerCase()}-to`}
-                      hourCycle={12}
+                      hourCycle={use24HourFormat ? 24 : 12}
                       granularity="hour"
                       value={{ hour: localWorkingHours[day.index].to, minute: 0 } as TimeValue}
                       onChange={value => handleTimeChange(day.index, "to", value)}

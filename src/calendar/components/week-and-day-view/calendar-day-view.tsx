@@ -6,7 +6,7 @@ import { CalendarTimeline } from "@/calendar/components/week-and-day-view/calend
 import { DayViewMultiDayEventsRow } from "@/calendar/components/week-and-day-view/day-view-multi-day-events-row";
 import { EventBlock } from "@/calendar/components/week-and-day-view/event-block";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-import { getCurrentEvents, getEventBlockStyle, getVisibleHours, groupEvents, isWorkingHour } from "@/calendar/helpers";
+import { getCurrentEvents, getEventBlockStyle, getVisibleHours, groupEvents, hourLabelPattern, isWorkingHour, timePattern } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { SingleCalendar } from "@/components/ui/single-calendar";
@@ -18,7 +18,7 @@ interface IProps {
 }
 
 export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
-  const { selectedDate, setSelectedDate, users, visibleHours, workingHours } = useCalendar();
+  const { selectedDate, setSelectedDate, users, visibleHours, workingHours, use24HourFormat } = useCalendar();
 
   const { hours, earliestEventHour, latestEventHour } = getVisibleHours(visibleHours, singleDayEvents);
 
@@ -57,7 +57,9 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
               {hours.map((hour, index) => (
                 <div key={hour} className="relative" style={{ height: "96px" }}>
                   <div className="absolute -top-3 right-2 flex h-6 items-center">
-                    {index !== 0 && <span className="text-xs text-muted-foreground">{format(new Date().setHours(hour, 0, 0, 0), "hh a")}</span>}
+                    {index !== 0 && (
+                      <span className="text-xs text-muted-foreground">{format(new Date().setHours(hour, 0, 0, 0), hourLabelPattern(use24HourFormat))}</span>
+                    )}
                   </div>
                 </div>
               ))}
@@ -175,7 +177,7 @@ export function CalendarDayView({ singleDayEvents, multiDayEvents }: IProps) {
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Clock className="size-3.5" />
                         <span className="text-sm">
-                          {format(parseISO(event.startDate), "h:mm a")} - {format(parseISO(event.endDate), "h:mm a")}
+                          {format(parseISO(event.startDate), timePattern(use24HourFormat))} - {format(parseISO(event.endDate), timePattern(use24HourFormat))}
                         </span>
                       </div>
                     </div>

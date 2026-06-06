@@ -6,6 +6,7 @@ import { memo } from "react";
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
 import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
+import { timePattern } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 import { cn } from "@/lib/utils";
 
@@ -44,7 +45,7 @@ interface IProps extends HTMLAttributes<HTMLDivElement>, Omit<VariantProps<typeo
 }
 
 function EventBlockBase({ event, className }: IProps) {
-  const { badgeVariant } = useCalendar();
+  const { badgeVariant, use24HourFormat } = useCalendar();
 
   const start = parseISO(event.startDate);
   const end = parseISO(event.endDate);
@@ -78,7 +79,7 @@ function EventBlockBase({ event, className }: IProps) {
 
           {durationInMinutes > 25 && (
             <p>
-              {format(start, "h:mm a")} - {format(end, "h:mm a")}
+              {format(start, timePattern(use24HourFormat))} - {format(end, timePattern(use24HourFormat))}
             </p>
           )}
         </div>

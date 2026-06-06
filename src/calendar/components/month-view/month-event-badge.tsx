@@ -5,7 +5,7 @@ import { memo } from "react";
 import { EventDetailsDialog } from "@/calendar/components/dialogs/event-details-dialog";
 import { DraggableEvent } from "@/calendar/components/dnd/draggable-event";
 import { useCalendar } from "@/calendar/contexts/calendar-context";
-
+import { timePattern } from "@/calendar/helpers";
 import type { IEvent } from "@/calendar/interfaces";
 import { cn } from "@/lib/utils";
 
@@ -55,7 +55,7 @@ interface IProps extends Omit<VariantProps<typeof eventBadgeVariants>, "color" |
 }
 
 function MonthEventBadgeBase({ event, cellDate, eventCurrentDay, eventTotalDays, className, position: propPosition }: IProps) {
-  const { badgeVariant } = useCalendar();
+  const { badgeVariant, use24HourFormat } = useCalendar();
 
   const itemStart = startOfDay(parseISO(event.startDate));
   const itemEnd = endOfDay(parseISO(event.endDate));
@@ -114,7 +114,7 @@ function MonthEventBadgeBase({ event, cellDate, eventCurrentDay, eventTotalDays,
             )}
           </div>
 
-          {renderBadgeText && <span>{format(new Date(event.startDate), "h:mm a")}</span>}
+          {renderBadgeText && <span>{format(new Date(event.startDate), timePattern(use24HourFormat))}</span>}
         </div>
       </EventDetailsDialog>
     </DraggableEvent>
