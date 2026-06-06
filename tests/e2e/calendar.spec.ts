@@ -25,10 +25,12 @@ test("renders every calendar view", async ({ page }) => {
 test("navigates between views via the header buttons", async ({ page }) => {
   await page.goto("/month-view");
 
-  await page.getByRole("link", { name: "View by week" }).click();
+  // View switching is client-side state synced to the URL via history.pushState
+  // (the switcher is buttons, not route links).
+  await page.getByRole("button", { name: "View by week" }).click();
   await expect(page).toHaveURL(/week-view/);
 
-  await page.getByRole("link", { name: "View by year" }).click();
+  await page.getByRole("button", { name: "View by year" }).click();
   await expect(page).toHaveURL(/year-view/);
 });
 
