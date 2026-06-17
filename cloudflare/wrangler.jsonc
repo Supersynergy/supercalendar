@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "super-calendar",
+  "pages_build_output_dir": "dist",
+  "compatibility_date": "2026-06-01",
+  "compatibility_flags": ["nodejs_compat"],
+  // Cloudflare D1 — the DEFAULT events store (no external account/token needed).
+  // `database_id` is filled by `wrangler d1 create supercalendar`. For local
+  // `astro dev` the binding alone is enough (miniflare provides a local D1).
+  // To use Turso/external SQL instead, set DATABASE_URL (a secret) — it wins.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "supercalendar",
+      "database_id": "REPLACE_AFTER_wrangler_d1_create"
+    }
+  ]
+}
