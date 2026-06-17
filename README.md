@@ -10,6 +10,10 @@ A [SuperSynergy](https://github.com/Supersynergy) fork of the excellent [`big-ca
 
 </div>
 
+> **☁️ Deploy on Cloudflare** — two paths in this repo:
+> - **`cloudflare/`** — a native **Cloudflare Pages** app (Astro + React island + Turso). Deploys to `*.pages.dev` via dashboard git-connect, no CLI login. See [`cloudflare/README.md`](cloudflare/README.md).
+> - **This Next app on CF Workers** (via OpenNext) — see [`deploy/cloudflare.md`](deploy/cloudflare.md). Both can share one Turso events database.
+
 ---
 
 ## Preview

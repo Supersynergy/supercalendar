@@ -129,13 +129,16 @@ export function CalendarProvider({ children, users, events }: { children: React.
     setLocalEvents(events);
   }, [events]);
 
-  // Live sync: subscribe to server-sent change ticks and re-pull the shared
-  // store, so a mutation on one device shows up on every other device in real
-  // time (no refresh needed).
+  // Live sync: two layers so it works on a single Node server AND on the edge.
+  //  1. SSE change ticks — instant push, but only fires when the mutation and the
+  //     stream share one process (Node/Docker/Kamal single instance).
+  //  2. Polling backstop — re-pulls every few seconds. This is what keeps
+  //     cross-device sync working on Cloudflare Workers, where each request is an
+  //     isolated invocation so the in-process pub/sub bus never reaches the
+  //     stream. On Node it's a cheap redundancy behind the instant SSE layer.
   useEffect(() => {
-    if (typeof window === "undefined" || typeof EventSource === "undefined") return;
+    if (typeof window === "undefined") return;
 
-    const source = new EventSource("/api/events/stream");
     let timer: ReturnType<typeof setTimeout> | null = null;
 
     const refresh = () => {
@@ -151,13 +154,28 @@ export function CalendarProvider({ children, users, events }: { children: React.
       }, 120);
     };
 
-    source.onmessage = event => {
-      if (event.data === "changed") refresh();
+    const source = typeof EventSource !== "undefined" ? new EventSource("/api/events/stream") : null;
+    if (source) {
+      source.onmessage = event => {
+        if (event.data === "changed") refresh();
+      };
+    }
+
+    // Backstop poll. Pauses while the tab is hidden to save battery/requests.
+    const POLL_MS = 8000;
+    const interval = setInterval(() => {
+      if (document.visibilityState === "visible") refresh();
+    }, POLL_MS);
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refresh();
     };
+    document.addEventListener("visibilitychange", onVisible);
 
     return () => {
       if (timer) clearTimeout(timer);
-      source.close();
+      source?.close();
+      clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVisible);
     };
   }, []);
 

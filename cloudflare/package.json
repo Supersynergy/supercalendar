@@ -1,0 +1,32 @@
+{
+  "name": "supercalendar-cf",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Pages event calendar — Astro shell + React island, Turso/libSQL store. Pairs with any Astro HTML starter; deploys to *.pages.dev with no CLI login (git connect).",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "cf:preview": "astro build && wrangler pages dev dist",
+    "cf:deploy": "astro build && wrangler pages deploy dist"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.0",
+    "@astrojs/react": "^4.3.0",
+    "@libsql/client": "^0.17.3",
+    "astro": "^5.13.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@tailwindcss/vite": "^4.1.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.0",
+    "typescript": "^6.0.3",
+    "wrangler": "^4.101.0"
+  }
+}

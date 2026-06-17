@@ -1,0 +1,26 @@
+---
+import Calendar from "../components/Calendar.tsx";
+import "../styles/global.css";
+
+// Static shell (prerendered) — only the calendar hydrates. This is the
+// 0KB-JS-first pattern: paste this island into any Astro HTML starter page.
+export const prerender = true;
+---
+
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SuperCalendar · Events</title>
+    <meta
+      name="description"
+      content="Event-Kalender auf Cloudflare Pages — Astro-Shell + React-Island, Turso-Store."
+    />
+  </head>
+  <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <main class="px-4 py-8 sm:py-12">
+      <Calendar client:load />
+    </main>
+  </body>
+</html>
